@@ -1,6 +1,8 @@
 import pygame
 import glob
 import random
+from src.Vehicle import Vehicle
+from src.Common import Lane
 
 # Configuration
 screen_width = 800
@@ -30,72 +32,16 @@ pygame.display.set_caption('Fuzzy Car')
 clock = pygame.time.Clock()
 
 
-# Decorate environments
-def draw_environments():
-    # Draw dividers
-    x = 0
-
-    y = screen_height / 2 - (vehicle_width + 2 * vehicle_divider_distance) - divider_width / 2
-    pygame.draw.rect(surface, dark_gray, (x, y, screen_width, divider_width))
-
-    y = screen_height / 2 - divider_width / 2
-    pygame.draw.rect(surface, dark_gray, (x, y, screen_width, divider_width))
-
-    y = screen_height / 2 + (vehicle_width + 2 * vehicle_divider_distance) - divider_width / 2
-    pygame.draw.rect(surface, dark_gray, (x, y, screen_width, divider_width))
-
-    # Draw yellow bars
-    for n in range(10):
-        pygame.draw.rect(surface, dark_yellow, (screen_width / 20 + n * screen_width / 10,
-                                                screen_height / 2 - (vehicle_width + vehicle_divider_distance) / 2 - 2,
-                                                screen_width / 20, 2))
-        pygame.draw.rect(surface, dark_yellow, (screen_width / 20 + n * screen_width / 10,
-                                                screen_height / 2 + (vehicle_width + vehicle_divider_distance) / 2 + 2,
-                                                screen_width / 20, 2))
-
-class Vehicle:
-    def __init__(self, x, y, img):
-        self.x = x
-        self.y = y
-        self.img = img
-
-    def draw(self, surface):
-        surface.blit(self.img, (self.x, self.y))
-
-
-def quit_game():
-    pygame.quit()
-    quit()
-
-
 def random_vehicle_icon():
     return random.choice(vehicle_icons)
 
 
-def spawn_vehicle_l2r(vehicles):
-    x = 0
-    y = screen_height / 2 - vehicle_width - vehicle_divider_distance
-    vehicle = Vehicle(x, y, random_vehicle_icon())
-    vehicles.append(vehicle)
-    return vehicle
-
-
-def spawn_vehicle_r2l(vehicles):
-    x = screen_width
-    y = screen_height / 2 + vehicle_divider_distance
-    vehicle = Vehicle(x, y, random_vehicle_icon())
-    vehicles.append(vehicle)
-    return vehicle
-
+v1 = Vehicle(200, 200, Lane.left_to_right, random_vehicle_icon(), surface)
+v2 = Vehicle(300, 300, Lane.top_to_bottom, random_vehicle_icon(), surface)
 
 def main_loop():
-    vehicles_l2r = []
-    vehicles_r2l = []
-    game_over = False
 
-    # Set events
-    SPAWN_EVENT = pygame.USEREVENT + 1
-    pygame.time.set_timer(SPAWN_EVENT, spawn_gap)
+    game_over = False
 
     while not game_over:
 
@@ -104,25 +50,14 @@ def main_loop():
             if event.type == pygame.QUIT:
                 game_over = True
 
-            if event.type == SPAWN_EVENT:
-                spawn_vehicle_l2r(vehicles_l2r)
-                spawn_vehicle_r2l(vehicles_r2l)
-
         # Refresh background
         surface.fill(white)
 
-        # Draw streets (environments)
-        draw_environments()
+        v1.move()
+        v1.draw()
 
-        # Left to Right Lane
-        for index, vehicle in enumerate(vehicles_l2r):
-            vehicle.x += vehicle_speed
-            vehicle.draw(surface)
-
-        # Right to Left Lane
-        for index, vehicle in enumerate(vehicles_r2l):
-            vehicle.x -= vehicle_speed
-            vehicle.draw(surface)
+        v2.move()
+        v2.draw()
 
         pygame.display.update()
         clock.tick(frame_rate)
