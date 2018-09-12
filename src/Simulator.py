@@ -16,6 +16,8 @@ class Simulator:
     def spawn(self):
         self.factory.create_vehicle(Lane.right_to_left)
         self.factory.create_vehicle(Lane.left_to_right)
+        self.factory.create_vehicle(Lane.bottom_to_top)
+        self.factory.create_vehicle(Lane.top_to_bottom)
 
     def loop(self):
         game_over = False
@@ -35,6 +37,7 @@ class Simulator:
             # Refresh background
             self.surface.fill(self.colors['white'])
 
+            self.factory.update_and_draw_traffic_lights()
             self.factory.update_and_draw_vehicles()
 
             pygame.display.update()
