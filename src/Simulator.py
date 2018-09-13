@@ -2,6 +2,7 @@ import pygame
 from src.Common import Lane
 from src.Config import Config
 from src.VehicleFactory import VehicleFactory
+from src.Background import Background
 
 
 class Simulator:
@@ -10,6 +11,8 @@ class Simulator:
         self.surface = pygame.display.set_mode((Config['simulator']['screen_width'],
                                                 Config['simulator']['screen_height']))
         self.factory = VehicleFactory(self.surface)
+        self.traffics = self.factory.traffic_lights
+        self.background = Background(self.surface, self.traffics)
         self.clock = pygame.time.Clock()
         self.colors = Config['colors']
 
@@ -36,6 +39,7 @@ class Simulator:
 
             # Refresh background
             self.surface.fill(self.colors['white'])
+            self.background.draw_all()
 
             self.factory.update_and_draw_traffic_lights()
             self.factory.update_and_draw_vehicles()

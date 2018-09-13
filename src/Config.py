@@ -18,7 +18,7 @@ Config = {
         'black': (0, 0, 0),
         'white': (255, 255, 255),
         'dark_gray': (169, 169, 169),
-        'dark_yellow': (204, 204, 0)
+        'traffic_yellow': (250, 210, 1)
     },
     'traffic_light': {
         'red_light_duration': 3,  # second
@@ -27,5 +27,10 @@ Config = {
         'distance_from_center': (60, 60),
         'body_height': 60,
         'body_width': 25
+    },
+    'background': {
+        'road_marking_width': 6,
+        'road_marking_alternate_lengths': (30, 20),
+        'junction_cover': (50, 50, 50, 50)  # top, right, bottom, left
     }
 }
