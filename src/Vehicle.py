@@ -29,30 +29,30 @@ class Vehicle:
     def draw(self):
         self.surface.blit(self.image, (self.x, self.y))
 
-    def move(self, next_vehicle=None):
+    def move(self, front_vehicle=None):
         safe_distance = Config['vehicle']['safe_distance']
         speed = Config['vehicle']['speed']
 
         if self.lane == Lane.left_to_right:
             self.x += speed
             self.y += 0
-            if next_vehicle:
-                self.x = min(self.x, next_vehicle.x - safe_distance)
+            if front_vehicle:
+                self.x = min(self.x, front_vehicle.x - safe_distance)
         elif self.lane == Lane.right_to_left:
             self.x -= speed
             self.y += 0
-            if next_vehicle:
-                self.x = max(self.x, next_vehicle.x + next_vehicle.width + safe_distance)
+            if front_vehicle:
+                self.x = max(self.x, front_vehicle.x + front_vehicle.width + safe_distance)
         elif self.lane == Lane.bottom_to_top:
             self.x += 0
             self.y -= speed
-            if next_vehicle:
-                self.y = max(self.y, next_vehicle.y + next_vehicle.height + safe_distance)
+            if front_vehicle:
+                self.y = max(self.y, front_vehicle.y + front_vehicle.height + safe_distance)
         elif self.lane == Lane.top_to_bottom:
             self.x += 0
             self.y += speed
-            if next_vehicle:
-                self.y = min(self.y, next.vehicle.y - safe_distance)
+            if front_vehicle:
+                self.y = min(self.y, front_vehicle.y - safe_distance)
 
     def is_behind_traffic_light(self, traffic_light):
         pass

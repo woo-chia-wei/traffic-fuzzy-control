@@ -14,6 +14,7 @@ class VehicleFactory:
         self.screen_height = Config['simulator']['screen_height']
         self.screen_width = Config['simulator']['screen_width']
         self.vehicle_body_width = Config['vehicle']['body_width']
+        self.vehicle_body_length = Config['vehicle']['body_length']
         self.bumper_distance = Config['simulator']['bumper_distance']
         self.traffic_light_distance_from_center = Config['traffic_light']['distance_from_center']
         self.traffic_light_body_height = Config['traffic_light']['body_height']
@@ -64,7 +65,6 @@ class VehicleFactory:
                                                                self.traffic_light_images,
                                                                self.surface)
 
-    @property
     def last_vehicle(self, lane):
         return self.get_vehicles(lane)[-1]
 
@@ -77,19 +77,28 @@ class VehicleFactory:
     def create_vehicle(self, lane):
         image = self.random_vehicle_image(lane)
         surface = self.surface
+        last_vehicle = self.last_vehicle(lane)
+        too_close = True
 
         if lane == Lane.left_to_right:
             x = 0
             y = self.screen_height / 2 - self.vehicle_body_width - self.bumper_distance
+            too_close = last_vehicle.x - self.safe_distance * 2 < x + self.vehicle_body_length
         elif lane == Lane.right_to_left:
-            x = self.screen_width
+            x = self.screen_width - self.vehicle_body_length
             y = self.screen_height / 2 + self.bumper_distance
+            too_close = last_vehicle.x + self.vehicle_body_length + self.safe_distance * 2 > x
         elif lane == Lane.top_to_bottom:
             x = self.screen_width / 2 + self.bumper_distance
             y = 0
+            too_close = last_vehicle.y - self.safe_distance * 2 < y + self.vehicle_body_length
         elif lane == Lane.bottom_to_top:
             x = self.screen_width / 2 - self.vehicle_body_width - self.bumper_distance
-            y = self.screen_height
+            y = self.screen_height - self.vehicle_body_length
+            too_close = last_vehicle.y + self.vehicle_body_length + self.safe_distance * 2 > y
+
+        if too_close:
+            return
 
         new_vehicle = Vehicle(x, y, lane, image, surface)
         self.vehicles[lane].append(new_vehicle)
@@ -100,14 +109,10 @@ class VehicleFactory:
             traffic_light.draw()
 
     def update_and_draw_vehicles(self):
-        all_vehicles = [
-            self.vehicles[Lane.left_to_right],
-            self.vehicles[Lane.right_to_left],
-            self.vehicles[Lane.top_to_bottom],
-            self.vehicles[Lane.bottom_to_top]
-        ]
-
-        for vehicles_lane in all_vehicles:
-            for vehicle in vehicles_lane:
-                vehicle.move()
+        for lane, vehicles_in_single_lane in self.vehicles.items():
+            for index, vehicle in enumerate(vehicles_in_single_lane):
+                front_vehicle = None
+                if index >= 1:
+                    front_vehicle = vehicles_in_single_lane[index - 1]
+                vehicle.move(front_vehicle)
                 vehicle.draw()
