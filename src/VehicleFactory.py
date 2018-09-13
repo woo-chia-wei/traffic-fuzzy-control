@@ -100,7 +100,7 @@ class VehicleFactory:
         if too_close:
             return
 
-        new_vehicle = Vehicle(x, y, lane, image, surface)
+        new_vehicle = Vehicle(x, y, lane, image, surface, self.traffic_lights[lane])
         self.vehicles[lane].append(new_vehicle)
 
     def update_and_draw_traffic_lights(self):
