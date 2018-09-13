@@ -14,8 +14,8 @@ class Simulator:
         self.colors = Config['colors']
 
     def spawn(self):
-        self.factory.create_vehicle(Lane.right_to_left)
         self.factory.create_vehicle(Lane.left_to_right)
+        self.factory.create_vehicle(Lane.right_to_left)
         self.factory.create_vehicle(Lane.bottom_to_top)
         self.factory.create_vehicle(Lane.top_to_bottom)
 

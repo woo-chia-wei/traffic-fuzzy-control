@@ -19,6 +19,7 @@ class VehicleFactory:
         self.traffic_light_distance_from_center = Config['traffic_light']['distance_from_center']
         self.traffic_light_body_height = Config['traffic_light']['body_height']
         self.traffic_light_body_width = Config['traffic_light']['body_width']
+        self.safe_distance = Config['vehicle']['safe_distance']
 
         self.surface = surface
         self.vehicles = {
@@ -71,7 +72,10 @@ class VehicleFactory:
                                                                TrafficStatus.red)
 
     def last_vehicle(self, lane):
-        return self.get_vehicles(lane)[-1]
+        if len(self.get_vehicles(lane)) > 0:
+            return self.get_vehicles(lane)[-1]
+        else:
+            return None
 
     def get_vehicles(self, lane):
         return self.vehicles[lane]
@@ -83,27 +87,31 @@ class VehicleFactory:
         image = self.random_vehicle_image(lane)
         surface = self.surface
         last_vehicle = self.last_vehicle(lane)
-        too_close = True
+        too_close = False
 
         if lane == Lane.left_to_right:
             x = 0
             y = self.screen_height / 2 - self.vehicle_body_width - self.bumper_distance
-            too_close = last_vehicle.x - self.safe_distance * 2 < x + self.vehicle_body_length
+            if last_vehicle:
+                too_close = last_vehicle.x - self.safe_distance * 2 < x + self.vehicle_body_length
 
         elif lane == Lane.right_to_left:
             x = self.screen_width - self.vehicle_body_length
             y = self.screen_height / 2 + self.bumper_distance
-            too_close = last_vehicle.x + self.vehicle_body_length + self.safe_distance * 2 > x
+            if last_vehicle:
+                too_close = last_vehicle.x + self.vehicle_body_length + self.safe_distance * 2 > x
 
         elif lane == Lane.top_to_bottom:
             x = self.screen_width / 2 + self.bumper_distance
             y = 0
-            too_close = last_vehicle.y - self.safe_distance * 2 < y + self.vehicle_body_length
+            if last_vehicle:
+                too_close = last_vehicle.y - self.safe_distance * 2 < y + self.vehicle_body_length
 
         elif lane == Lane.bottom_to_top:
             x = self.screen_width / 2 - self.vehicle_body_width - self.bumper_distance
             y = self.screen_height - self.vehicle_body_length
-            too_close = last_vehicle.y + self.vehicle_body_length + self.safe_distance * 2 > y
+            if last_vehicle:
+                too_close = last_vehicle.y + self.vehicle_body_length + self.safe_distance * 2 > y
 
         if too_close:
             return

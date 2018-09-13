@@ -32,11 +32,11 @@ class TrafficLight:
 
     @property
     def width(self):
-        return self.image.get_width()
+        return Config['traffic_light']['body_width']
 
     @property
     def height(self):
-        return self.image.get_height()
+        return Config['traffic_light']['body_height']
 
     def draw(self):
         self.surface.blit(self.images[self.status], (self.x, self.y))
