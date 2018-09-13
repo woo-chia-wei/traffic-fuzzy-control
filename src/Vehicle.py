@@ -41,9 +41,9 @@ class Vehicle:
             self.x += speed
             self.y += 0
             if front_vehicle:
-                self.x = min(self.x, front_vehicle.x - safe_distance)
+                self.x = min(self.x, front_vehicle.x - safe_distance - self.width)
             if stopping_non_green_light:
-                self.x = min(self.x, self.traffic_light.x + self.traffic_light.width)
+                self.x = min(self.x, self.traffic_light.x + self.traffic_light.width - self.width)
 
         elif self.lane == Lane.right_to_left:
             self.x -= speed
@@ -65,9 +65,9 @@ class Vehicle:
             self.x += 0
             self.y += speed
             if front_vehicle:
-                self.y = min(self.y, front_vehicle.y - safe_distance)
+                self.y = min(self.y, front_vehicle.y - safe_distance - self.height)
             if stopping_non_green_light:
-                self.y = min(self.y, self.traffic_light.y + self.traffic_light.height)
+                self.y = min(self.y, self.traffic_light.y + self.traffic_light.height - self.height)
 
     def is_behind_traffic_light(self):
         if self.lane == Lane.left_to_right:

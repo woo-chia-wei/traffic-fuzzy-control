@@ -4,7 +4,7 @@ from src.Common import TrafficStatus
 from src.Config import Config
 
 
-class TrafficSystemController:
+class TrafficController:
     def __init__(self, traffic_lights, opposite_traffic_lights):
         if len(traffic_lights) == 0 or len(opposite_traffic_lights) == 0:
             raise Exception('There must be at least one traffic lights!')

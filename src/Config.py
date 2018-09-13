@@ -1,15 +1,16 @@
 Config = {
     'vehicle': {
-        'speed': 4,
-        'safe_distance': 5,
+        'speed': 5,
+        'safe_distance': 10,
         'body_length': 50,
-        'body_width': 30
+        'body_width': 30,
+        'safe_spawn_factor': 1.2
     },
     'simulator': {
         'screen_width': 800,
         'screen_height': 800,
         'bumper_distance': 10,
-        'spawn_gap': 500,  # millisecond
+        'spawn_gap': 600,  # millisecond
         'frame_rate': 30,
         'gap_between_traffic_switch': 1  # second
     },
