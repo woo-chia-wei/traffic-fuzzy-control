@@ -33,4 +33,8 @@ class TrafficSystemController:
             self.stop(self.traffic_lights)
             time.sleep(gap)
             self.go(self.opposite_traffic_lights)
+        self.toggle_state = not self.toggle_state
 
+    def has_conflicts(self):
+        all_traffic_lights = self.traffic_lights + self.opposite_traffic_lights
+        return all([t.status == TrafficStatus.green for t in all_traffic_lights])

@@ -49,21 +49,26 @@ class VehicleFactory:
         self.traffic_lights[Lane.left_to_right] = TrafficLight(x, y, Lane.left_to_right,
                                                                self.traffic_light_images,
                                                                self.surface)
+
         x = self.screen_width / 2 + self.traffic_light_distance_from_center[0]
         y = self.screen_height / 2 - self.traffic_light_distance_from_center[1] - self.traffic_light_body_height
         self.traffic_lights[Lane.right_to_left] = TrafficLight(x, y, Lane.right_to_left,
                                                                self.traffic_light_images,
                                                                self.surface)
+
         x = self.screen_width / 2 - self.traffic_light_distance_from_center[0] - self.traffic_light_body_width
         y = self.screen_height / 2 + self.traffic_light_distance_from_center[1]
         self.traffic_lights[Lane.bottom_to_top] = TrafficLight(x, y, Lane.bottom_to_top,
                                                                self.traffic_light_images,
-                                                               self.surface)
+                                                               self.surface,
+                                                               TrafficStatus.red)
+
         x = self.screen_width / 2 + self.traffic_light_distance_from_center[0]
         y = self.screen_height / 2 + self.traffic_light_distance_from_center[1]
         self.traffic_lights[Lane.top_to_bottom] = TrafficLight(x, y, Lane.top_to_bottom,
                                                                self.traffic_light_images,
-                                                               self.surface)
+                                                               self.surface,
+                                                               TrafficStatus.red)
 
     def last_vehicle(self, lane):
         return self.get_vehicles(lane)[-1]
@@ -84,14 +89,17 @@ class VehicleFactory:
             x = 0
             y = self.screen_height / 2 - self.vehicle_body_width - self.bumper_distance
             too_close = last_vehicle.x - self.safe_distance * 2 < x + self.vehicle_body_length
+
         elif lane == Lane.right_to_left:
             x = self.screen_width - self.vehicle_body_length
             y = self.screen_height / 2 + self.bumper_distance
             too_close = last_vehicle.x + self.vehicle_body_length + self.safe_distance * 2 > x
+
         elif lane == Lane.top_to_bottom:
             x = self.screen_width / 2 + self.bumper_distance
             y = 0
             too_close = last_vehicle.y - self.safe_distance * 2 < y + self.vehicle_body_length
+
         elif lane == Lane.bottom_to_top:
             x = self.screen_width / 2 - self.vehicle_body_width - self.bumper_distance
             y = self.screen_height - self.vehicle_body_length
