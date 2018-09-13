@@ -4,15 +4,14 @@ from src.Config import Config
 
 class Vehicle:
     def __init__(self, x, y, lane, image, surface, traffic_light):
+        if lane != traffic_light.lane:
+            raise Exception('The lane of traffic light and vehicle must be same.')
         self.x = x
         self.y = y
         self.lane = lane
         self.image = image
         self.surface = surface
         self.traffic_light = traffic_light
-
-        if self.lane != self.traffic_light.lane:
-            raise Exception('The lane of traffic light and vehicle must be same.')
 
     @property
     def center_x(self):

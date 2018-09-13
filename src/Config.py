@@ -10,7 +10,8 @@ Config = {
         'screen_height': 800,
         'bumper_distance': 10,
         'spawn_gap': 1000,  # millisecond
-        'frame_rate': 30
+        'frame_rate': 30,
+        'gap_between_traffic_switch': 1  # second
     },
     'colors': {
         'black': (0, 0, 0),
