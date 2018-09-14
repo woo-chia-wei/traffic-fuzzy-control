@@ -11,12 +11,15 @@ class BackgroundController:
         self.screen_height = Config['simulator']['screen_height']
         self.screen_width = Config['simulator']['screen_width']
 
-    def draw_all(self):
-        self.refresh_screen()
-        self.draw_road_markings()
+        self.black = Config['colors']['black']
 
     def refresh_screen(self):
         self.surface.fill(Config['colors']['white'])
+
+    def draw_vechile_count(self, total):
+        font = pygame.font.SysFont('Comic Sans MS', Config['background']['total_vehicles_font_size'])
+        text_surface = font.render('Total Vehicles: {}'.format(total), False, self.black)
+        self.surface.blit(text_surface, Config['background']['total_vehicles_position'])
 
     def draw_road_markings(self):
         bumper_distance = Config['simulator']['bumper_distance']

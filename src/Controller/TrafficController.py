@@ -60,6 +60,7 @@ class TrafficController:
         self.traffic_lights[lane] = TrafficLight(x, y, lane, traffic_light_images, self.surface)
 
     def update_and_draw_traffic_lights(self):
+        # For simulation only
         for lane, traffic_light in self.traffic_lights.items():
             traffic_light.auto_update()
             traffic_light.draw()

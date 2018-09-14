@@ -32,6 +32,8 @@ class VehicleController:
             Lane.bottom_to_top: [pygame.image.load(f) for f in glob.glob('images/vehicles_bottom_to_top/*.png')]
         }
 
+        self.counter = 0
+
     def last_vehicle(self, lane: Lane):
         if len(self.get_vehicles(lane)) > 0:
             return self.get_vehicles(lane)[-1]
@@ -83,6 +85,7 @@ class VehicleController:
 
         new_vehicle = Vehicle(x, y, lane, image, surface, traffic_light)
         self.vehicles[lane].append(new_vehicle)
+        self.counter += 1
 
     def update_and_draw_vehicles(self):
         for lane, vehicles_in_single_lane in self.vehicles.items():

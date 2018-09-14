@@ -31,6 +31,8 @@ Config = {
     'background': {
         'road_marking_width': 6,
         'road_marking_alternate_lengths': (30, 20),
-        'junction_cover': (50, 50, 50, 50)  # top, right, bottom, left
+        'junction_cover': (50, 50, 50, 50),  # top, right, bottom, left
+        'total_vehicles_position': (5, 5),
+        'total_vehicles_font_size': 20
     }
 }

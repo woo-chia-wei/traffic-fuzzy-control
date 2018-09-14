@@ -40,7 +40,10 @@ class Simulator:
                 if event.type == pygame.QUIT:
                     game_over = True
 
-            self.background_ctrl.draw_all()
+            self.background_ctrl.refresh_screen()
+            self.background_ctrl.draw_road_markings()
+            self.background_ctrl.draw_vechile_count(self.vehicle_ctrl.counter)
+
             self.traffic_ctrl.update_and_draw_traffic_lights()
             self.vehicle_ctrl.update_and_draw_vehicles()
 
