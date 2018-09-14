@@ -15,6 +15,11 @@ class TrafficLight:
             TrafficStatus.red: Config['traffic_light']['red_light_duration'],
             TrafficStatus.yellow: Config['traffic_light']['yellow_light_duration']
         }
+        self.duration_extension = {
+            TrafficStatus.green: 0,
+            TrafficStatus.red: 0,
+            TrafficStatus.yellow: 0
+        }
         self.start_time = {
             TrafficStatus.green: time.time(),
             TrafficStatus.red: time.time(),
@@ -46,7 +51,8 @@ class TrafficLight:
         self.start_time[self.status] = time.time()
 
     def auto_update(self):
-        to_change_status = (time.time() - self.start_time[self.status]) > self.duration[self.status]
+        to_change_status = (time.time() - self.start_time[self.status]) > \
+                           (self.duration[self.status] + self.duration_extension[self.status])
         if to_change_status:
             if self.status == TrafficStatus.green:
                 self.status = TrafficStatus.yellow

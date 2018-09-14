@@ -16,7 +16,7 @@ class BackgroundController:
     def refresh_screen(self):
         self.surface.fill(Config['colors']['white'])
 
-    def draw_vechile_count(self, total):
+    def draw_vehicle_count(self, total):
         font = pygame.font.SysFont('Comic Sans MS', Config['background']['total_vehicles_font_size'])
         text_surface = font.render('Total Vehicles: {}'.format(total), False, self.black)
         self.surface.blit(text_surface, Config['background']['total_vehicles_position'])

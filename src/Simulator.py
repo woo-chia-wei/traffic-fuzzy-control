@@ -47,7 +47,7 @@ class Simulator:
 
             self.background_ctrl.refresh_screen()
             self.background_ctrl.draw_road_markings()
-            self.background_ctrl.draw_vechile_count(self.vehicle_ctrl.counter)
+            self.background_ctrl.draw_vehicle_count(self.vehicle_ctrl.counter)
 
             self.traffic_ctrl.update_and_draw_traffic_lights()
             self.vehicle_ctrl.update_and_draw_vehicles()
@@ -59,11 +59,13 @@ class Simulator:
 
         if self.traffic_state == DoubleLane.Horizontal:
             self.traffic_ctrl.go(DoubleLane.Horizontal)
+            # expected delay by self.gap_between_switch
             self.traffic_ctrl.stop(DoubleLane.Vertical)
             self.traffic_state = DoubleLane.Vertical
 
         elif self.traffic_state == DoubleLane.Vertical:
             self.traffic_ctrl.go(DoubleLane.Vertical)
+            # expected delay by self.gap_between_switch
             self.traffic_ctrl.stop(DoubleLane.Horizontal)
             self.traffic_state = DoubleLane.Horizontal
 
