@@ -12,7 +12,7 @@ Config = {
         'bumper_distance': 10,
         'spawn_gap': 600,  # millisecond
         'frame_rate': 30,
-        'gap_between_traffic_switch': 1  # second
+        'gap_between_traffic_switch': 2  # second
     },
     'colors': {
         'black': (0, 0, 0),
@@ -21,9 +21,9 @@ Config = {
         'traffic_yellow': (250, 210, 1)
     },
     'traffic_light': {
-        'red_light_duration': 3,  # second
+        'red_light_duration': 9999999,  # second
         'yellow_light_duration': 1,  # second
-        'green_light_duration': 5,  # second
+        'green_light_duration': 9999999,  # second
         'distance_from_center': (60, 60),
         'body_height': 60,
         'body_width': 25

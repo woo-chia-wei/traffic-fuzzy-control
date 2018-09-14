@@ -46,10 +46,6 @@ class TrafficController:
             ]
         return None
 
-    def change_status(self, double_lane: DoubleLane, status: TrafficStatus):
-        for traffic_light in self.get_traffic_lights(double_lane):
-            traffic_light.change_status(status)
-
     def create_traffic_light(self, x, y, lane: Lane):
         traffic_light_images_dir = os.path.join(os.getcwd(), 'images', 'traffic_light')
         traffic_light_images = {
@@ -60,33 +56,17 @@ class TrafficController:
         self.traffic_lights[lane] = TrafficLight(x, y, lane, traffic_light_images, self.surface)
 
     def update_and_draw_traffic_lights(self):
-        # For simulation only
         for lane, traffic_light in self.traffic_lights.items():
             traffic_light.auto_update()
             traffic_light.draw()
 
-    def go(self, double_lane: DoubleLane):
+    def change_status(self, double_lane: DoubleLane, status: TrafficStatus):
         for traffic_light in self.get_traffic_lights(double_lane):
-            if traffic_light.status != TrafficStatus.green:
-                traffic_light.change_status(TrafficStatus.green)
+            traffic_light.change_status(status)
+
+    def go(self, double_lane: DoubleLane):
+        self.change_status(double_lane, TrafficStatus.green)
 
     def stop(self, double_lane: DoubleLane):
-        for traffic_light in self.get_traffic_lights(double_lane):
-            if traffic_light.status == TrafficStatus.green:
-                traffic_light.change_status(TrafficStatus.yellow)
+        self.change_status(double_lane, TrafficStatus.yellow)
 
-    # def toggle(self):
-    #     gap = Config['simulator']['gap_between_traffic_switch']
-    #     if self.toggle_state:
-    #         self.stop(self.opposite_traffic_lights)
-    #         time.sleep(gap)
-    #         self.go(self.traffic_lights)
-    #     else:
-    #         self.stop(self.traffic_lights)
-    #         time.sleep(gap)
-    #         self.go(self.opposite_traffic_lights)
-    #     self.toggle_state = not self.toggle_state
-    #
-    # def has_conflicts(self):
-    #     all_traffic_lights = self.traffic_lights + self.opposite_traffic_lights
-    #     return all([t.status == TrafficStatus.green for t in all_traffic_lights])

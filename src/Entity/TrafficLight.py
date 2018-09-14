@@ -41,20 +41,17 @@ class TrafficLight:
     def draw(self):
         self.surface.blit(self.images[self.status], (self.x, self.y))
 
-    def change_status(self, next_status=None):
-        if not next_status:
-            if self.status == TrafficStatus.green:
-                new_status = TrafficStatus.yellow
-            elif self.status == TrafficStatus.yellow:
-                new_status = TrafficStatus.red
-            elif self.status == TrafficStatus.red:
-                new_status = TrafficStatus.green
-        self.status = new_status
+    def change_status(self, status: TrafficStatus):
+        self.status = status
         self.start_time[self.status] = time.time()
 
     def auto_update(self):
         to_change_status = (time.time() - self.start_time[self.status]) > self.duration[self.status]
         if to_change_status:
-            self.change_status()
-
-
+            if self.status == TrafficStatus.green:
+                self.status = TrafficStatus.yellow
+            elif self.status == TrafficStatus.yellow:
+                self.status = TrafficStatus.red
+            elif self.status == TrafficStatus.red:
+                self.status = TrafficStatus.green
+            self.start_time[self.status] = time.time()
