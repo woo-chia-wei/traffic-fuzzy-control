@@ -5,8 +5,8 @@ import os
 
 from src.Common import Lane, TrafficStatus
 from src.Config import Config
-from src.Vehicle import Vehicle
-from src.TrafficLight import TrafficLight
+from src.Entity.Vehicle import Vehicle
+from src.Entity.TrafficLight import TrafficLight
 
 
 class VehicleController:

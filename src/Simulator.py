@@ -1,8 +1,8 @@
 import pygame
 from src.Common import Lane
 from src.Config import Config
-from src.VehicleController import VehicleController
-from src.BackgroundController import BackgroundController
+from src.Controller.VehicleController import VehicleController
+from src.Controller.BackgroundController import BackgroundController
 
 
 class Simulator:
