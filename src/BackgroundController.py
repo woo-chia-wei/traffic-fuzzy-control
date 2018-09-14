@@ -3,7 +3,7 @@ import pygame
 from src.Config import Config
 
 
-class Background:
+class BackgroundController:
     def __init__(self, surface, traffic_lights):
         self.surface = surface
         self.traffic_lights = traffic_lights
@@ -12,8 +12,11 @@ class Background:
         self.screen_width = Config['simulator']['screen_width']
 
     def draw_all(self):
+        self.refresh_screen()
         self.draw_road_markings()
-        pass
+
+    def refresh_screen(self):
+        self.surface.fill(Config['colors']['white'])
 
     def draw_road_markings(self):
         bumper_distance = Config['simulator']['bumper_distance']

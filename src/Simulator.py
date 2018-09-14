@@ -1,8 +1,8 @@
 import pygame
 from src.Common import Lane
 from src.Config import Config
-from src.VehicleFactory import VehicleFactory
-from src.Background import Background
+from src.VehicleController import VehicleController
+from src.BackgroundController import BackgroundController
 
 
 class Simulator:
@@ -10,17 +10,17 @@ class Simulator:
         self.caption = caption
         self.surface = pygame.display.set_mode((Config['simulator']['screen_width'],
                                                 Config['simulator']['screen_height']))
-        self.factory = VehicleFactory(self.surface)
-        self.traffics = self.factory.traffic_lights
-        self.background = Background(self.surface, self.traffics)
+        self.vehicle_ctrl = VehicleController(self.surface)
+        self.traffics = self.vehicle_ctrl.traffic_lights
+        self.background_ctrl = BackgroundController(self.surface, self.traffics)
         self.clock = pygame.time.Clock()
         self.colors = Config['colors']
 
     def spawn(self):
-        self.factory.create_vehicle(Lane.left_to_right)
-        self.factory.create_vehicle(Lane.right_to_left)
-        self.factory.create_vehicle(Lane.bottom_to_top)
-        self.factory.create_vehicle(Lane.top_to_bottom)
+        self.vehicle_ctrl.create_vehicle(Lane.left_to_right)
+        self.vehicle_ctrl.create_vehicle(Lane.right_to_left)
+        self.vehicle_ctrl.create_vehicle(Lane.bottom_to_top)
+        self.vehicle_ctrl.create_vehicle(Lane.top_to_bottom)
 
     def loop(self):
         game_over = False
@@ -28,21 +28,16 @@ class Simulator:
         pygame.time.set_timer(SPAWN_EVENT, Config['simulator']['spawn_gap'])
 
         while not game_over:
-
             for event in pygame.event.get():
-
                 if event.type == SPAWN_EVENT:
                     self.spawn()
-
                 if event.type == pygame.QUIT:
                     game_over = True
 
-            # Refresh background
-            self.surface.fill(self.colors['white'])
-            self.background.draw_all()
+            self.background_ctrl.draw_all()
 
-            self.factory.update_and_draw_traffic_lights()
-            self.factory.update_and_draw_vehicles()
+            self.vehicle_ctrl.update_and_draw_traffic_lights()
+            self.vehicle_ctrl.update_and_draw_vehicles()
 
             pygame.display.update()
             self.clock.tick(Config['simulator']['frame_rate'])

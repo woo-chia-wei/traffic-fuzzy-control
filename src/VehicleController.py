@@ -9,7 +9,7 @@ from src.Vehicle import Vehicle
 from src.TrafficLight import TrafficLight
 
 
-class VehicleFactory:
+class VehicleController:
     def __init__(self, surface):
         self.screen_height = Config['simulator']['screen_height']
         self.screen_width = Config['simulator']['screen_width']
