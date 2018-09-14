@@ -1,8 +1,9 @@
 import pygame
-from src.Common import Lane
+from src.Common import Lane, DoubleLane
 from src.Config import Config
 from src.VehicleController import VehicleController
 from src.BackgroundController import BackgroundController
+from src.TrafficController import TrafficController
 
 
 class Simulator:
@@ -11,8 +12,11 @@ class Simulator:
         self.surface = pygame.display.set_mode((Config['simulator']['screen_width'],
                                                 Config['simulator']['screen_height']))
         self.vehicle_ctrl = VehicleController(self.surface)
-        self.traffics = self.vehicle_ctrl.traffic_lights
-        self.background_ctrl = BackgroundController(self.surface, self.traffics)
+        self.traffic_horizontal_ctrl = TrafficController(self.surface, DoubleLane.Horizontal)
+        self.traffic_vertical_ctrl = TrafficController(self.surface, DoubleLane.Vertical)
+        self.background_ctrl = BackgroundController(self.surface,
+                                                    self.traffic_horizontal_ctrl.get_traffic_lights() +
+                                                    self.traffic_vertical_ctrl.get_traffic_lights())
         self.clock = pygame.time.Clock()
         self.colors = Config['colors']
 
@@ -35,9 +39,9 @@ class Simulator:
                     game_over = True
 
             self.background_ctrl.draw_all()
-
-            self.vehicle_ctrl.update_and_draw_traffic_lights()
             self.vehicle_ctrl.update_and_draw_vehicles()
+            self.traffic_vertical_ctrl.update_and_draw_traffic_lights()
+            self.traffic_horizontal_ctrl.update_and_draw_traffic_lights()
 
             pygame.display.update()
             self.clock.tick(Config['simulator']['frame_rate'])

@@ -12,3 +12,8 @@ class TrafficStatus(Enum):
     red = 1
     green = 2
     yellow = 3
+
+
+class DoubleLane(Enum):
+    Horizontal = 1
+    Vertical = 2

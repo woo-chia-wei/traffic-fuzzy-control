@@ -1,10 +1,10 @@
 import time
-from src.Common import TrafficStatus
+from src.Common import TrafficStatus, Lane
 from src.Config import Config
 
 
 class TrafficLight:
-    def __init__(self, x, y, lane, images, surface, status=TrafficStatus.green):
+    def __init__(self, x:float, y:float, lane:Lane, images, surface, status=TrafficStatus.green):
         self.x = x
         self.y = y
         self.lane = lane
