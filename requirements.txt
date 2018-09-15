@@ -1,0 +1,2 @@
+pygame==1.9.4
+scikit-fuzzy==0.3.1
