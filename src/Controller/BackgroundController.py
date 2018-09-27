@@ -1,5 +1,5 @@
 import pygame
-
+from src.Common import DoubleLane
 from src.Config import Config
 
 
@@ -13,13 +13,86 @@ class BackgroundController:
 
         self.black = Config['colors']['black']
 
+        self.horizontal_frequency_small = None
+        self.horizontal_frequency_medium = None
+        self.horizontal_frequency_large = None
+
+        self.vertical_frequency_small = None
+        self.horizontal_frequency_medium = None
+        self.horizontal_frequency_large = None
+
+        self.spawn_rate = {
+            DoubleLane.Horizontal: {
+                'slow': True,
+                'medium': False,
+                'fast': False
+            },
+            DoubleLane.Vertical: {
+                'slow': True,
+                'medium': False,
+                'fast': False
+            }
+        }
+
+        self.spawn_rate_buttons = {
+            DoubleLane.Horizontal: {
+                'slow': None,
+                'medium': None,
+                'fast': None
+            },
+            DoubleLane.Vertical: {
+                'slow': None,
+                'medium': None,
+                'fast': None
+            }
+        }
+
+    def set_spawn_rate(self, double_lane: DoubleLane, target_rate):
+        for rate in ['slow', 'medium', 'fast']:
+            self.spawn_rate[double_lane][rate] = (target_rate == rate)
+
+    def get_spawn_rate(self, double_lane: DoubleLane):
+        for rate in ['slow', 'medium', 'fast']:
+            if self.spawn_rate[double_lane][rate]:
+                return rate
+        raise Exception('None of slow, medium, fast is true!!!')
+
     def refresh_screen(self):
         self.surface.fill(Config['colors']['white'])
 
+    def draw_spawn_rate_buttons(self):
+        normal_font = pygame.font.SysFont('Comic Sans MS', 16)
+        underline_font = pygame.font.SysFont('Comic Sans MS', 16)
+        underline_font.set_underline(True)
+
+        self.surface.blit(normal_font.render('Spawn Rate (Horizontal):', False, self.black), (5, 25))
+        fonts = [normal_font, normal_font, normal_font]
+        if self.spawn_rate[DoubleLane.Horizontal]['slow']:
+            fonts[0] = underline_font
+        if self.spawn_rate[DoubleLane.Horizontal]['medium']:
+            fonts[1] = underline_font
+        if self.spawn_rate[DoubleLane.Horizontal]['fast']:
+            fonts[2] = underline_font
+        self.spawn_rate_buttons[DoubleLane.Horizontal]['slow'] = self.surface.blit(fonts[0].render('Slow', False, self.black), (200, 25))
+        self.spawn_rate_buttons[DoubleLane.Horizontal]['medium'] = self.surface.blit(fonts[1].render('Medium', False, self.black), (240, 25))
+        self.spawn_rate_buttons[DoubleLane.Horizontal]['fast'] = self.surface.blit(fonts[2].render('Fast', False, self.black), (300, 25))
+
+        self.surface.blit(normal_font.render('Spawn Rate (Vertical):', False, self.black), (5, 45))
+        fonts = [normal_font, normal_font, normal_font]
+        if self.spawn_rate[DoubleLane.Vertical]['slow']:
+            fonts[0] = underline_font
+        if self.spawn_rate[DoubleLane.Vertical]['medium']:
+            fonts[1] = underline_font
+        if self.spawn_rate[DoubleLane.Vertical]['fast']:
+            fonts[2] = underline_font
+        self.spawn_rate_buttons[DoubleLane.Vertical]['slow'] = self.surface.blit(fonts[0].render('Slow', False, self.black), (200, 45))
+        self.spawn_rate_buttons[DoubleLane.Vertical]['medium'] = self.surface.blit(fonts[1].render('Medium', False, self.black), (240, 45))
+        self.spawn_rate_buttons[DoubleLane.Vertical]['fast'] = self.surface.blit(fonts[2].render('Fast', False, self.black), (300, 45))
+
     def draw_vehicle_count(self, total):
-        font = pygame.font.SysFont('Comic Sans MS', Config['background']['total_vehicles_font_size'])
+        font = pygame.font.SysFont('Comic Sans MS', 16)
         text_surface = font.render('Total Vehicles: {}'.format(total), False, self.black)
-        self.surface.blit(text_surface, Config['background']['total_vehicles_position'])
+        self.surface.blit(text_surface, (5, 5))
 
     def draw_road_markings(self):
         bumper_distance = Config['simulator']['bumper_distance']

@@ -10,7 +10,11 @@ Config = {
         'screen_width': 800,
         'screen_height': 800,
         'bumper_distance': 10,
-        'spawn_gap': 600,  # millisecond
+        'spawn_rate': {
+            'fast': 500,  # millisecond
+            'medium': 900,  # millisecond
+            'slow': 1200,  # millisecond
+        },
         'frame_rate': 30,
         'gap_between_traffic_switch': 2  # second
     },
@@ -32,7 +36,5 @@ Config = {
         'road_marking_width': 6,
         'road_marking_alternate_lengths': (30, 20),
         'junction_cover': (50, 50, 50, 50),  # top, right, bottom, left
-        'total_vehicles_position': (5, 5),
-        'total_vehicles_font_size': 20
     }
 }

@@ -22,32 +22,48 @@ class Simulator:
         self.traffic_state: DoubleLane = DoubleLane.Horizontal
         self.gap_between_switch = Config['simulator']['gap_between_traffic_switch']
 
-    def spawn(self):
-        self.spawn_single_vehicle(Lane.left_to_right)
-        self.spawn_single_vehicle(Lane.right_to_left)
-        self.spawn_single_vehicle(Lane.bottom_to_top)
-        self.spawn_single_vehicle(Lane.top_to_bottom)
+    def spawn(self, double_lane: DoubleLane):
+        if double_lane == DoubleLane.Horizontal:
+            self.spawn_single_vehicle(Lane.left_to_right)
+            self.spawn_single_vehicle(Lane.right_to_left)
+        elif double_lane == DoubleLane.Vertical:
+            self.spawn_single_vehicle(Lane.bottom_to_top)
+            self.spawn_single_vehicle(Lane.top_to_bottom)
 
     def spawn_single_vehicle(self, lane: Lane):
         self.vehicle_ctrl.create_vehicle(lane, self.traffic_ctrl.traffic_lights[lane])
 
     def main_loop(self):
         game_over = False
-        SPAWN_EVENT = pygame.USEREVENT + 1
-        pygame.time.set_timer(SPAWN_EVENT, Config['simulator']['spawn_gap'])
+        HORIZONTAL_SPAWN_EVENT = pygame.USEREVENT + 1
+        pygame.time.set_timer(HORIZONTAL_SPAWN_EVENT, Config['simulator']['spawn_rate']['slow'])
+        VERTICAL_SPAWN_EVENT = pygame.USEREVENT + 2
+        pygame.time.set_timer(VERTICAL_SPAWN_EVENT, Config['simulator']['spawn_rate']['slow'])
 
         while not game_over:
             for event in pygame.event.get():
-                if event.type == SPAWN_EVENT:
-                    self.spawn()
+                if event.type == HORIZONTAL_SPAWN_EVENT:
+                    rate = self.background_ctrl.get_spawn_rate(DoubleLane.Horizontal)
+                    pygame.time.set_timer(HORIZONTAL_SPAWN_EVENT, Config['simulator']['spawn_rate'][rate])
+                    self.spawn(DoubleLane.Horizontal)
+                if event.type == VERTICAL_SPAWN_EVENT:
+                    rate = self.background_ctrl.get_spawn_rate(DoubleLane.Vertical)
+                    pygame.time.set_timer(VERTICAL_SPAWN_EVENT, Config['simulator']['spawn_rate'][rate])
+                    self.spawn(DoubleLane.Vertical)
                 if event.type == pygame.QUIT:
                     game_over = True
-                if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.type == pygame.KEYDOWN:
                     self.toggle_traffic()
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    for double_lane in [DoubleLane.Horizontal, DoubleLane.Vertical]:
+                        for rate in ['slow', 'medium', 'fast']:
+                            if self.background_ctrl.spawn_rate_buttons[double_lane][rate].collidepoint(event.pos):
+                                self.background_ctrl.set_spawn_rate(double_lane, rate)
 
             self.background_ctrl.refresh_screen()
             self.background_ctrl.draw_road_markings()
             self.background_ctrl.draw_vehicle_count(self.vehicle_ctrl.counter)
+            self.background_ctrl.draw_spawn_rate_buttons()
 
             self.traffic_ctrl.update_and_draw_traffic_lights()
             self.vehicle_ctrl.update_and_draw_vehicles()
@@ -70,7 +86,8 @@ class Simulator:
             self.traffic_state = DoubleLane.Horizontal
 
     def initialize(self):
-        self.spawn()
+        self.spawn(DoubleLane.Horizontal)
+        self.spawn(DoubleLane.Vertical)
         self.toggle_traffic()
 
     def start(self):
