@@ -1,4 +1,5 @@
 import pygame
+import os
 from src.Common import DoubleLane
 from src.Config import Config
 
@@ -111,41 +112,44 @@ class BackgroundController:
         road_marking_width = Config['background']['road_marking_width']
         road_marking_length, road_marking_distance = Config['background']['road_marking_alternate_lengths']
         traffic_yellow = Config['colors']['traffic_yellow']
-        white = Config['colors']['white']
-        junction_cover = Config['background']['junction_cover']
+        gap = Config['background']['road_marking_gap_from_yellow_box']
+
+        # yellow box
+        yb_top, yb_left, yb_bottom, yb_right = Config['background']['yellow_box_junction']
+        yellow_box_junction_img = os.path.join(os.getcwd(), 'images', 'junction', 'yellow_box_junction.png')
+        picture = pygame.image.load(yellow_box_junction_img)
+        picture = pygame.transform.scale(picture, (yb_left + yb_right, yb_top + yb_bottom))
+        self.surface.blit(picture, (self.screen_width / 2 - yb_left, self.screen_height / 2 - yb_top))
 
         # lane from bottom to top
-        x = self.screen_width / 2 - bumper_distance - vehicle_body_width / 2 - road_marking_width / 2
-        y = 0
-        while self.within_boundary(x, y):
-            pygame.draw.rect(self.surface, traffic_yellow, (x, y, road_marking_width, road_marking_length))
-            y += road_marking_length + road_marking_distance
-
         # lane from top to bottom
-        x = self.screen_width / 2 + bumper_distance + vehicle_body_width / 2 - road_marking_width / 2
-        y = 0
-        while self.within_boundary(x, y):
-            pygame.draw.rect(self.surface, traffic_yellow, (x, y, road_marking_width, road_marking_length))
+        x1 = self.screen_width / 2 - bumper_distance - vehicle_body_width / 2 - road_marking_width / 2
+        x2 = self.screen_width / 2 + bumper_distance + vehicle_body_width / 2 - road_marking_width / 2
+        y = self.screen_height / 2 - yb_top - road_marking_length - road_marking_distance
+        while y >= 0:
+            pygame.draw.rect(self.surface, traffic_yellow, (x1, y, road_marking_width, road_marking_length))
+            pygame.draw.rect(self.surface, traffic_yellow, (x2, y, road_marking_width, road_marking_length))
+            y -= road_marking_length + road_marking_distance
+        y = self.screen_height / 2 + yb_bottom + gap
+        while y <= self.screen_height:
+            pygame.draw.rect(self.surface, traffic_yellow, (x1, y, road_marking_width, road_marking_length))
+            pygame.draw.rect(self.surface, traffic_yellow, (x2, y, road_marking_width, road_marking_length))
             y += road_marking_length + road_marking_distance
 
         # lane from left to right
-        x = 0
-        y = self.screen_height / 2 - bumper_distance - vehicle_body_width / 2 - road_marking_width / 2
-        while self.within_boundary(x, y):
-            pygame.draw.rect(self.surface, traffic_yellow, (x, y, road_marking_length, road_marking_width))
+        # lane from right to left
+        x = self.screen_width / 2 - yb_left - road_marking_length - gap
+        y1 = self.screen_height / 2 - bumper_distance - vehicle_body_width / 2 - road_marking_width / 2
+        y2 = self.screen_height / 2 + bumper_distance + vehicle_body_width / 2 - road_marking_width / 2
+        while x >= 0:
+            pygame.draw.rect(self.surface, traffic_yellow, (x, y1, road_marking_length, road_marking_width))
+            pygame.draw.rect(self.surface, traffic_yellow, (x, y2, road_marking_length, road_marking_width))
+            x -= road_marking_length + road_marking_distance
+        x = self.screen_width / 2 + yb_right + gap
+        while x <= self.screen_width:
+            pygame.draw.rect(self.surface, traffic_yellow, (x, y1, road_marking_length, road_marking_width))
+            pygame.draw.rect(self.surface, traffic_yellow, (x, y2, road_marking_length, road_marking_width))
             x += road_marking_length + road_marking_distance
-
-        # lane from left to right
-        x = 0
-        y = self.screen_height / 2 + bumper_distance + vehicle_body_width / 2 - road_marking_width / 2
-        while self.within_boundary(x, y):
-            pygame.draw.rect(self.surface, traffic_yellow, (x, y, road_marking_length, road_marking_width))
-            x += road_marking_length + road_marking_distance
-
-        top, left, bottom, right = junction_cover
-        x = self.screen_width / 2 - left
-        y = self.screen_height / 2 - top
-        pygame.draw.rect(self.surface, white, (x, y, left + right, top + bottom))
 
     def within_boundary(self, x, y):
         return 0 <= x <= self.screen_width and 0 <= y <= self.screen_height

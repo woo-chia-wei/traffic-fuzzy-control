@@ -36,6 +36,7 @@ Config = {
     'background': {
         'road_marking_width': 6,
         'road_marking_alternate_lengths': (30, 20),
-        'junction_cover': (50, 50, 50, 50),  # top, right, bottom, left
+        'road_marking_gap_from_yellow_box': 10,
+        'yellow_box_junction': (50, 50, 50, 50),  # top, right, bottom, left
     }
 }
