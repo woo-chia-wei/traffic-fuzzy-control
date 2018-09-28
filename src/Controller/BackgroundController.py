@@ -12,6 +12,7 @@ class BackgroundController:
         self.screen_width = Config['simulator']['screen_width']
 
         self.black = Config['colors']['black']
+        self.red = Config['colors']['red']
 
         self.horizontal_frequency_small = None
         self.horizontal_frequency_medium = None
@@ -65,29 +66,39 @@ class BackgroundController:
         underline_font = pygame.font.SysFont('Comic Sans MS', 16)
         underline_font.set_underline(True)
 
+        # Horizontal lanes controls
         self.surface.blit(normal_font.render('Spawn Rate (Horizontal):', False, self.black), (5, 25))
         fonts = [normal_font, normal_font, normal_font]
+        colors = [self.black, self.black, self.black]
         if self.spawn_rate[DoubleLane.Horizontal]['slow']:
             fonts[0] = underline_font
+            colors[0] = self.red
         if self.spawn_rate[DoubleLane.Horizontal]['medium']:
             fonts[1] = underline_font
+            colors[1] = self.red
         if self.spawn_rate[DoubleLane.Horizontal]['fast']:
             fonts[2] = underline_font
-        self.spawn_rate_buttons[DoubleLane.Horizontal]['slow'] = self.surface.blit(fonts[0].render('Slow', False, self.black), (200, 25))
-        self.spawn_rate_buttons[DoubleLane.Horizontal]['medium'] = self.surface.blit(fonts[1].render('Medium', False, self.black), (240, 25))
-        self.spawn_rate_buttons[DoubleLane.Horizontal]['fast'] = self.surface.blit(fonts[2].render('Fast', False, self.black), (300, 25))
+            colors[2] = self.red
+        self.spawn_rate_buttons[DoubleLane.Horizontal]['slow'] = self.surface.blit(fonts[0].render('Slow', False, colors[0]), (200, 25))
+        self.spawn_rate_buttons[DoubleLane.Horizontal]['medium'] = self.surface.blit(fonts[1].render('Medium', False, colors[1]), (240, 25))
+        self.spawn_rate_buttons[DoubleLane.Horizontal]['fast'] = self.surface.blit(fonts[2].render('Fast', False, colors[2]), (300, 25))
 
+        # Vertical lanes controls
         self.surface.blit(normal_font.render('Spawn Rate (Vertical):', False, self.black), (5, 45))
         fonts = [normal_font, normal_font, normal_font]
+        colors = [self.black, self.black, self.black]
         if self.spawn_rate[DoubleLane.Vertical]['slow']:
             fonts[0] = underline_font
+            colors[0] = self.red
         if self.spawn_rate[DoubleLane.Vertical]['medium']:
             fonts[1] = underline_font
+            colors[1] = self.red
         if self.spawn_rate[DoubleLane.Vertical]['fast']:
             fonts[2] = underline_font
-        self.spawn_rate_buttons[DoubleLane.Vertical]['slow'] = self.surface.blit(fonts[0].render('Slow', False, self.black), (200, 45))
-        self.spawn_rate_buttons[DoubleLane.Vertical]['medium'] = self.surface.blit(fonts[1].render('Medium', False, self.black), (240, 45))
-        self.spawn_rate_buttons[DoubleLane.Vertical]['fast'] = self.surface.blit(fonts[2].render('Fast', False, self.black), (300, 45))
+            colors[2] = self.red
+        self.spawn_rate_buttons[DoubleLane.Vertical]['slow'] = self.surface.blit(fonts[0].render('Slow', False, colors[0]), (200, 45))
+        self.spawn_rate_buttons[DoubleLane.Vertical]['medium'] = self.surface.blit(fonts[1].render('Medium', False, colors[1]), (240, 45))
+        self.spawn_rate_buttons[DoubleLane.Vertical]['fast'] = self.surface.blit(fonts[2].render('Fast', False, colors[2]), (300, 45))
 
     def draw_vehicle_count(self, total):
         font = pygame.font.SysFont('Comic Sans MS', 16)

@@ -22,7 +22,8 @@ Config = {
         'black': (0, 0, 0),
         'white': (255, 255, 255),
         'dark_gray': (169, 169, 169),
-        'traffic_yellow': (250, 210, 1)
+        'traffic_yellow': (250, 210, 1),
+        'red': (255, 0, 0)
     },
     'traffic_light': {
         'red_light_duration': 9999999,  # second
