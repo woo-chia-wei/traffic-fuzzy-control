@@ -79,3 +79,9 @@ class Vehicle:
         elif self.lane == Lane.top_to_bottom:
             return self.y + self.height <= self.traffic_light.y + self.traffic_light.height
         return False
+
+    def inside_canvas(self) -> bool:
+        return self.x >= 0 and \
+                self.x + self.width <= Config['simulator']['screen_width'] and \
+                self.y >= 0 and \
+                self.y + self.height <= Config['simulator']['screen_height']

@@ -66,6 +66,7 @@ class Simulator:
             self.background_ctrl.draw_spawn_rate_buttons()
 
             self.traffic_ctrl.update_and_draw_traffic_lights()
+            self.vehicle_ctrl.destroy_vehicles_outside_canvas()
             self.vehicle_ctrl.update_and_draw_vehicles()
 
             pygame.display.update()

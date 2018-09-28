@@ -95,3 +95,7 @@ class VehicleController:
                     front_vehicle = vehicles_in_single_lane[index - 1]
                 vehicle.move(front_vehicle)
                 vehicle.draw()
+
+    def destroy_vehicles_outside_canvas(self):
+        for lane, vehicles_in_single_lane in self.vehicles.items():
+            self.vehicles[lane] = [v for v in self.vehicles[lane] if v.inside_canvas()]
