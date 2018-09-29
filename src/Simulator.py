@@ -52,18 +52,19 @@ class Simulator:
                     self.spawn(DoubleLane.Vertical)
                 if event.type == pygame.QUIT:
                     game_over = True
-                if event.type == pygame.KEYDOWN:
-                    self.toggle_traffic()
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     for double_lane in [DoubleLane.Horizontal, DoubleLane.Vertical]:
                         for rate in ['slow', 'medium', 'fast']:
                             if self.background_ctrl.spawn_rate_buttons[double_lane][rate].collidepoint(event.pos):
                                 self.background_ctrl.set_spawn_rate(double_lane, rate)
+                    if self.background_ctrl.switch_traffic_button.collidepoint(event.pos):
+                        self.toggle_traffic()
 
             self.background_ctrl.refresh_screen()
             self.background_ctrl.draw_road_markings()
             self.background_ctrl.draw_vehicle_count(self.vehicle_ctrl.counter)
             self.background_ctrl.draw_spawn_rate_buttons()
+            self.background_ctrl.draw_switch_traffic_button()
 
             self.traffic_ctrl.update_and_draw_traffic_lights()
             self.vehicle_ctrl.destroy_vehicles_outside_canvas()

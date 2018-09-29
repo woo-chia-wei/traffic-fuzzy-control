@@ -49,6 +49,8 @@ class BackgroundController:
             }
         }
 
+        self.switch_traffic_button = None
+
     def set_spawn_rate(self, double_lane: DoubleLane, target_rate):
         for rate in ['slow', 'medium', 'fast']:
             self.spawn_rate[double_lane][rate] = (target_rate == rate)
@@ -68,7 +70,7 @@ class BackgroundController:
         underline_font.set_underline(True)
 
         # Horizontal lanes controls
-        self.surface.blit(normal_font.render('Spawn Rate (Horizontal):', False, self.black), (5, 25))
+        self.surface.blit(normal_font.render('Spawn Rate (Horizontal):', True, self.black), (5, 25))
         fonts = [normal_font, normal_font, normal_font]
         colors = [self.black, self.black, self.black]
         if self.spawn_rate[DoubleLane.Horizontal]['slow']:
@@ -80,12 +82,12 @@ class BackgroundController:
         if self.spawn_rate[DoubleLane.Horizontal]['fast']:
             fonts[2] = underline_font
             colors[2] = self.red
-        self.spawn_rate_buttons[DoubleLane.Horizontal]['slow'] = self.surface.blit(fonts[0].render('Slow', False, colors[0]), (200, 25))
-        self.spawn_rate_buttons[DoubleLane.Horizontal]['medium'] = self.surface.blit(fonts[1].render('Medium', False, colors[1]), (240, 25))
-        self.spawn_rate_buttons[DoubleLane.Horizontal]['fast'] = self.surface.blit(fonts[2].render('Fast', False, colors[2]), (300, 25))
+        self.spawn_rate_buttons[DoubleLane.Horizontal]['slow'] = self.surface.blit(fonts[0].render('Slow', True, colors[0]), (200, 25))
+        self.spawn_rate_buttons[DoubleLane.Horizontal]['medium'] = self.surface.blit(fonts[1].render('Medium', True, colors[1]), (240, 25))
+        self.spawn_rate_buttons[DoubleLane.Horizontal]['fast'] = self.surface.blit(fonts[2].render('Fast', True, colors[2]), (300, 25))
 
         # Vertical lanes controls
-        self.surface.blit(normal_font.render('Spawn Rate (Vertical):', False, self.black), (5, 45))
+        self.surface.blit(normal_font.render('Spawn Rate (Vertical):', True, self.black), (5, 45))
         fonts = [normal_font, normal_font, normal_font]
         colors = [self.black, self.black, self.black]
         if self.spawn_rate[DoubleLane.Vertical]['slow']:
@@ -97,13 +99,13 @@ class BackgroundController:
         if self.spawn_rate[DoubleLane.Vertical]['fast']:
             fonts[2] = underline_font
             colors[2] = self.red
-        self.spawn_rate_buttons[DoubleLane.Vertical]['slow'] = self.surface.blit(fonts[0].render('Slow', False, colors[0]), (200, 45))
-        self.spawn_rate_buttons[DoubleLane.Vertical]['medium'] = self.surface.blit(fonts[1].render('Medium', False, colors[1]), (240, 45))
-        self.spawn_rate_buttons[DoubleLane.Vertical]['fast'] = self.surface.blit(fonts[2].render('Fast', False, colors[2]), (300, 45))
+        self.spawn_rate_buttons[DoubleLane.Vertical]['slow'] = self.surface.blit(fonts[0].render('Slow', True, colors[0]), (200, 45))
+        self.spawn_rate_buttons[DoubleLane.Vertical]['medium'] = self.surface.blit(fonts[1].render('Medium', True, colors[1]), (240, 45))
+        self.spawn_rate_buttons[DoubleLane.Vertical]['fast'] = self.surface.blit(fonts[2].render('Fast', True, colors[2]), (300, 45))
 
     def draw_vehicle_count(self, total):
         font = pygame.font.SysFont('Comic Sans MS', 16)
-        text_surface = font.render('Total Vehicles: {}'.format(total), False, self.black)
+        text_surface = font.render('Total Vehicles: {}'.format(total), True, self.black)
         self.surface.blit(text_surface, (5, 5))
 
     def draw_road_markings(self):
@@ -153,3 +155,15 @@ class BackgroundController:
 
     def within_boundary(self, x, y):
         return 0 <= x <= self.screen_width and 0 <= y <= self.screen_height
+
+    def draw_switch_traffic_button(self):
+        font = pygame.font.SysFont('Comic Sans MS', 16)
+        text_surface = font.render('Switch', True, self.black)
+        rect = self.surface.blit(text_surface, (self.screen_width - 100, 20))
+        gap = 5
+        x = rect.left - gap
+        y = rect.top - gap
+        w = rect.width + gap * 2
+        h = rect.height + gap * 2
+        pygame.draw.rect(self.surface, self.black, (x, y, w, h), 3)
+        self.switch_traffic_button = rect
