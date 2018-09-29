@@ -1,15 +1,15 @@
 Config = {
     'vehicle': {
         'speed': 5,
-        'safe_distance': 10,
-        'body_length': 50,
-        'body_width': 30,
-        'safe_spawn_factor': 1.2
+        'safe_distance': 5,
+        'body_length': 35,
+        'body_width': 25,
+        'safe_spawn_factor': 1.1
     },
     'simulator': {
         'screen_width': 800,
         'screen_height': 800,
-        'bumper_distance': 10,
+        'bumper_distance': 5,
         'spawn_rate': {
             'fast': 500,  # millisecond
             'medium': 900,  # millisecond
@@ -34,7 +34,7 @@ Config = {
         'body_width': 25
     },
     'background': {
-        'road_marking_width': 6,
+        'road_marking_width': 3,
         'road_marking_alternate_lengths': (30, 20),
         'road_marking_gap_from_yellow_box': 10,
         'yellow_box_junction': (50, 50, 50, 50),  # top, right, bottom, left

@@ -1,15 +1,20 @@
+import pygame
+
 from src.Common import Lane, TrafficStatus
 from src.Config import Config
 
 
 class Vehicle:
-    def __init__(self, x, y, lane, image, surface, traffic_light):
+    def __init__(self, x, y, lane:Lane, image, surface, traffic_light):
         if lane != traffic_light.lane:
             raise Exception('The lane of traffic light and vehicle must be same.')
         self.x = x
         self.y = y
         self.lane = lane
-        self.image = image
+        if lane in [Lane.left_to_right, Lane.right_to_left]:
+            self.image = pygame.transform.scale(image, (Config['vehicle']['body_length'], Config['vehicle']['body_width']))
+        elif lane in [Lane.top_to_bottom, Lane.bottom_to_top]:
+            self.image = pygame.transform.scale(image, (Config['vehicle']['body_width'], Config['vehicle']['body_length']))
         self.surface = surface
         self.traffic_light = traffic_light
 
