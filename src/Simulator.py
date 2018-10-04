@@ -19,8 +19,14 @@ class Simulator:
                                                     self.traffic_ctrl.get_traffic_lights(DoubleLane.Horizontal) +
                                                     self.traffic_ctrl.get_traffic_lights(DoubleLane.Vertical))
         self.clock = pygame.time.Clock()
-        self.traffic_state: DoubleLane = DoubleLane.Horizontal
+        self.traffic_state: DoubleLane = DoubleLane.Vertical
         self.gap_between_switch = Config['simulator']['gap_between_traffic_switch']
+
+        self.HORIZONTAL_SPAWN_EVENT = pygame.USEREVENT + 1
+        self.VERTICAL_SPAWN_EVENT = pygame.USEREVENT + 2
+
+        self.switching_traffic = False
+        self.switching_traffic_start_time = None
 
     def spawn(self, double_lane: DoubleLane):
         if double_lane == DoubleLane.Horizontal:
@@ -35,30 +41,45 @@ class Simulator:
 
     def main_loop(self):
         game_over = False
-        HORIZONTAL_SPAWN_EVENT = pygame.USEREVENT + 1
-        pygame.time.set_timer(HORIZONTAL_SPAWN_EVENT, Config['simulator']['spawn_rate']['slow'])
-        VERTICAL_SPAWN_EVENT = pygame.USEREVENT + 2
-        pygame.time.set_timer(VERTICAL_SPAWN_EVENT, Config['simulator']['spawn_rate']['slow'])
+
+        pygame.time.set_timer(self.HORIZONTAL_SPAWN_EVENT, Config['simulator']['spawn_rate']['slow'])
+        pygame.time.set_timer(self.VERTICAL_SPAWN_EVENT, Config['simulator']['spawn_rate']['slow'])
 
         while not game_over:
-            for event in pygame.event.get():
-                if event.type == HORIZONTAL_SPAWN_EVENT:
-                    rate = self.background_ctrl.get_spawn_rate(DoubleLane.Horizontal)
-                    pygame.time.set_timer(HORIZONTAL_SPAWN_EVENT, Config['simulator']['spawn_rate'][rate])
-                    self.spawn(DoubleLane.Horizontal)
-                if event.type == VERTICAL_SPAWN_EVENT:
-                    rate = self.background_ctrl.get_spawn_rate(DoubleLane.Vertical)
-                    pygame.time.set_timer(VERTICAL_SPAWN_EVENT, Config['simulator']['spawn_rate'][rate])
-                    self.spawn(DoubleLane.Vertical)
-                if event.type == pygame.QUIT:
-                    game_over = True
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    for double_lane in [DoubleLane.Horizontal, DoubleLane.Vertical]:
-                        for rate in ['slow', 'medium', 'fast']:
-                            if self.background_ctrl.spawn_rate_buttons[double_lane][rate].collidepoint(event.pos):
-                                self.background_ctrl.set_spawn_rate(double_lane, rate)
-                    if self.background_ctrl.switch_traffic_button.collidepoint(event.pos):
-                        self.toggle_traffic()
+
+            # Do not check any events while switching traffic
+            if not self.switching_traffic:
+                for event in pygame.event.get():
+                    if event.type == self.HORIZONTAL_SPAWN_EVENT:
+                        rate = self.background_ctrl.get_spawn_rate(DoubleLane.Horizontal)
+                        pygame.time.set_timer(self.HORIZONTAL_SPAWN_EVENT, Config['simulator']['spawn_rate'][rate])
+                        self.spawn(DoubleLane.Horizontal)
+
+                    if event.type == self.VERTICAL_SPAWN_EVENT:
+                        rate = self.background_ctrl.get_spawn_rate(DoubleLane.Vertical)
+                        pygame.time.set_timer(self.VERTICAL_SPAWN_EVENT, Config['simulator']['spawn_rate'][rate])
+                        self.spawn(DoubleLane.Vertical)
+
+                    if event.type == pygame.QUIT:
+                        game_over = True
+
+                    if event.type == pygame.MOUSEBUTTONDOWN:
+                        for double_lane in [DoubleLane.Horizontal, DoubleLane.Vertical]:
+                            for rate in ['slow', 'medium', 'fast']:
+                                if self.background_ctrl.spawn_rate_buttons[double_lane][rate].collidepoint(event.pos):
+                                    self.background_ctrl.set_spawn_rate(double_lane, rate)
+                        if self.background_ctrl.switch_traffic_button.collidepoint(event.pos):
+                            self.toggle_traffic()
+            else:
+                current_time = time.time()
+                if current_time - self.switching_traffic_start_time > Config['simulator']['gap_between_traffic_switch']:
+                    if self.traffic_state == DoubleLane.Vertical:
+                        self.traffic_ctrl.go(DoubleLane.Horizontal)
+                        self.traffic_state = DoubleLane.Horizontal
+                    elif self.traffic_state == DoubleLane.Horizontal:
+                        self.traffic_ctrl.go(DoubleLane.Vertical)
+                        self.traffic_state = DoubleLane.Vertical
+                    self.switching_traffic = False
 
             self.background_ctrl.refresh_screen()
             self.background_ctrl.draw_road_markings()
@@ -74,18 +95,12 @@ class Simulator:
             self.clock.tick(Config['simulator']['frame_rate'])
 
     def toggle_traffic(self):
-
-        if self.traffic_state == DoubleLane.Horizontal:
-            self.traffic_ctrl.go(DoubleLane.Horizontal)
-            # expected delay by self.gap_between_switch
+        if self.traffic_state == DoubleLane.Vertical:
             self.traffic_ctrl.stop(DoubleLane.Vertical)
-            self.traffic_state = DoubleLane.Vertical
-
-        elif self.traffic_state == DoubleLane.Vertical:
-            self.traffic_ctrl.go(DoubleLane.Vertical)
-            # expected delay by self.gap_between_switch
+        elif self.traffic_state == DoubleLane.Horizontal:
             self.traffic_ctrl.stop(DoubleLane.Horizontal)
-            self.traffic_state = DoubleLane.Horizontal
+        self.switching_traffic = True
+        self.switching_traffic_start_time = time.time()
 
     def initialize(self):
         self.spawn(DoubleLane.Horizontal)
