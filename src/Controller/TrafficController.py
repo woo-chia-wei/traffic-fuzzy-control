@@ -27,11 +27,11 @@ class TrafficController:
 
         y = self.screen_width / 2 - self.traffic_light_distance_from_center[0] - self.traffic_light_body_width
         x = self.screen_height / 2 + self.traffic_light_distance_from_center[1]
-        self.create_traffic_light(x, y, Lane.bottom_to_top)
+        self.create_traffic_light(x, y, Lane.top_to_bottom)
 
         y = self.screen_width / 2 + self.traffic_light_distance_from_center[0]
         x = self.screen_height / 2 - self.traffic_light_distance_from_center[1] - self.traffic_light_body_height
-        self.create_traffic_light(x, y, Lane.top_to_bottom)
+        self.create_traffic_light(x, y, Lane.bottom_to_top)
 
     def get_traffic_lights(self, double_lane: DoubleLane):
         if double_lane == DoubleLane.Horizontal:
@@ -54,8 +54,12 @@ class TrafficController:
     def create_traffic_light(self, x, y, lane: Lane):
         traffic_light_images_dir = os.path.join(os.getcwd(), 'images', 'traffic_light')
         rotation = 0
-        if lane == Lane.bottom_to_top or lane == Lane.top_to_bottom:
+        if lane == Lane.bottom_to_top:
             rotation = 90
+        elif lane == Lane.right_to_left:
+            rotation = 180
+        elif lane == Lane.top_to_bottom:
+            rotation = 270
         traffic_light_images = {
             TrafficStatus.red: self.design_traffic_image(traffic_light_images_dir, 'traffic_light_red.png', rotation),
             TrafficStatus.green: self.design_traffic_image(traffic_light_images_dir, 'traffic_light_green.png', rotation),

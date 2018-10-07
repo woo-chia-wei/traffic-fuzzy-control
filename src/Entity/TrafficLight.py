@@ -80,9 +80,9 @@ class TrafficLight:
         if self.lane == Lane.left_to_right:
             pos_y = self.y - self.height
         elif self.lane == Lane.right_to_left:
-            pos_y = self.y + self.height
+            pos_y = self.y + self.height*5/4
         elif self.lane == Lane.top_to_bottom:
-            pos_x = self.x - self.width*2
-        elif self.lane == Lane.bottom_to_top:
             pos_x = self.x + self.width*2
+        elif self.lane == Lane.bottom_to_top:
+            pos_x = self.x - self.width*2
         self.surface.blit(text_surface, (pos_x, pos_y))
