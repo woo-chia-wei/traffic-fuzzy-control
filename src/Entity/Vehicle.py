@@ -48,7 +48,7 @@ class Vehicle:
             if front_vehicle:
                 self.x = min(self.x, front_vehicle.x - safe_distance - self.width)
             if stopping_non_green_light:
-                self.x = min(self.x, self.traffic_light.x + self.traffic_light.width - self.width)
+                self.x = min(self.x, self.traffic_light.x - self.traffic_light.width/2 - self.width)
 
         elif self.lane == Lane.right_to_left:
             self.x -= speed
@@ -56,7 +56,7 @@ class Vehicle:
             if front_vehicle:
                 self.x = max(self.x, front_vehicle.x + front_vehicle.width + safe_distance)
             if stopping_non_green_light:
-                self.x = max(self.x, self.traffic_light.x)
+                self.x = max(self.x, self.traffic_light.x + self.traffic_light.width*3/2)
 
         elif self.lane == Lane.bottom_to_top:
             self.x += 0
@@ -64,7 +64,7 @@ class Vehicle:
             if front_vehicle:
                 self.y = max(self.y, front_vehicle.y + front_vehicle.height + safe_distance)
             if stopping_non_green_light:
-                self.y = max(self.y, self.traffic_light.y)
+                self.y = max(self.y, self.traffic_light.y + self.traffic_light.height + self.height*2)
 
         elif self.lane == Lane.top_to_bottom:
             self.x += 0
@@ -72,17 +72,17 @@ class Vehicle:
             if front_vehicle:
                 self.y = min(self.y, front_vehicle.y - safe_distance - self.height)
             if stopping_non_green_light:
-                self.y = min(self.y, self.traffic_light.y + self.traffic_light.height - self.height)
+                self.y = min(self.y, self.traffic_light.y - self.traffic_light.height - self.height*5/2)
 
     def is_behind_traffic_light(self):
         if self.lane == Lane.left_to_right:
             return self.x + self.width <= self.traffic_light.x + self.traffic_light.width
         elif self.lane == Lane.right_to_left:
-            return self.traffic_light.x <= self.x
+            return self.traffic_light.x + self.traffic_light.width <= self.x
         elif self.lane == Lane.bottom_to_top:
-            return self.traffic_light.y <= self.y
+            return self.traffic_light.y + self.traffic_light.height <= self.y - self.height*3/2
         elif self.lane == Lane.top_to_bottom:
-            return self.y + self.height <= self.traffic_light.y + self.traffic_light.height
+            return self.y + self.height*2 <= self.traffic_light.y - self.traffic_light.height
         return False
 
     def inside_canvas(self) -> bool:

@@ -25,12 +25,12 @@ class TrafficController:
         y = self.screen_height / 2 + self.traffic_light_distance_from_center[1]
         self.create_traffic_light(x, y, Lane.right_to_left)
 
-        x = self.screen_width / 2 - self.traffic_light_distance_from_center[0] - self.traffic_light_body_width
-        y = self.screen_height / 2 + self.traffic_light_distance_from_center[1]
+        y = self.screen_width / 2 - self.traffic_light_distance_from_center[0] - self.traffic_light_body_width
+        x = self.screen_height / 2 + self.traffic_light_distance_from_center[1]
         self.create_traffic_light(x, y, Lane.bottom_to_top)
 
-        x = self.screen_width / 2 + self.traffic_light_distance_from_center[0]
-        y = self.screen_height / 2 - self.traffic_light_distance_from_center[1] - self.traffic_light_body_height
+        y = self.screen_width / 2 + self.traffic_light_distance_from_center[0]
+        x = self.screen_height / 2 - self.traffic_light_distance_from_center[1] - self.traffic_light_body_height
         self.create_traffic_light(x, y, Lane.top_to_bottom)
 
     def get_traffic_lights(self, double_lane: DoubleLane):
@@ -46,12 +46,20 @@ class TrafficController:
             ]
         return None
 
+    def design_traffic_image(self, file_dir, filename, rotation):
+        image = pygame.image.load(os.path.join(file_dir, filename))
+        return pygame.transform.rotate(pygame.transform.scale(image,
+                    (self.traffic_light_body_width, self.traffic_light_body_height)), rotation)
+
     def create_traffic_light(self, x, y, lane: Lane):
         traffic_light_images_dir = os.path.join(os.getcwd(), 'images', 'traffic_light')
+        rotation = 0
+        if lane == Lane.bottom_to_top or lane == Lane.top_to_bottom:
+            rotation = 90
         traffic_light_images = {
-            TrafficStatus.red: pygame.image.load(os.path.join(traffic_light_images_dir, 'traffic_light_red.png')),
-            TrafficStatus.green: pygame.image.load(os.path.join(traffic_light_images_dir, 'traffic_light_green.png')),
-            TrafficStatus.yellow: pygame.image.load(os.path.join(traffic_light_images_dir, 'traffic_light_yellow.png'))
+            TrafficStatus.red: self.design_traffic_image(traffic_light_images_dir, 'traffic_light_red.png', rotation),
+            TrafficStatus.green: self.design_traffic_image(traffic_light_images_dir, 'traffic_light_green.png', rotation),
+            TrafficStatus.yellow: self.design_traffic_image(traffic_light_images_dir, 'traffic_light_yellow.png', rotation)
         }
         self.traffic_lights[lane] = TrafficLight(x, y, lane, traffic_light_images, self.surface)
 

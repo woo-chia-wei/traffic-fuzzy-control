@@ -23,15 +23,17 @@ Config = {
         'white': (255, 255, 255),
         'dark_gray': (169, 169, 169),
         'traffic_yellow': (250, 210, 1),
-        'red': (255, 0, 0)
+        'red': (255, 0, 0),
+        'yellow': (255, 255, 0),
+        'green': (0, 255, 0)
     },
     'traffic_light': {
-        'red_light_duration': 9999999,  # second
+        'red_light_duration': 100,  # second
         'yellow_light_duration': 1,  # second
-        'green_light_duration': 9999999,  # second
-        'distance_from_center': (60, 60),
-        'body_height': 60,
-        'body_width': 25
+        'green_light_duration': 100,  # second
+        'distance_from_center': (40, 10),
+        'body_height': 30,
+        'body_width': 20
     },
     'background': {
         'road_marking_width': 3,

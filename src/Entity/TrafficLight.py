@@ -1,6 +1,7 @@
 import time
-from src.Common import TrafficStatus
+from src.Common import TrafficStatus, Lane
 from src.Config import Config
+import pygame
 
 
 class TrafficLight:
@@ -61,3 +62,27 @@ class TrafficLight:
             elif self.status == TrafficStatus.red:
                 self.status = TrafficStatus.green
             self.start_time[self.status] = time.time()
+        self.update_traffic_countdown()
+
+    def update_traffic_countdown(self):
+        font = pygame.font.SysFont('Comic Sans MS', 12, True)
+        countdown = (self.duration[self.status] + self.duration_extension[self.status]) - (time.time() - self.start_time[self.status])
+        text_color = Config['colors']['black']
+        if self.status == TrafficStatus.green:
+            text_color = Config['colors']['green']
+        elif self.status == TrafficStatus.yellow:
+            text_color = Config['colors']['yellow']
+        elif self.status == TrafficStatus.red:
+            text_color = Config['colors']['red']
+        text_surface = font.render('{}'.format(round(countdown, 1)), True, text_color)
+        pos_x = self.x
+        pos_y = self.y
+        if self.lane == Lane.left_to_right:
+            pos_y = self.y - self.height
+        elif self.lane == Lane.right_to_left:
+            pos_y = self.y + self.height
+        elif self.lane == Lane.top_to_bottom:
+            pos_x = self.x - self.width*2
+        elif self.lane == Lane.bottom_to_top:
+            pos_x = self.x + self.width*2
+        self.surface.blit(text_surface, (pos_x, pos_y))
