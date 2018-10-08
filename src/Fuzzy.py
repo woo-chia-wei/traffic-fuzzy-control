@@ -98,10 +98,4 @@ class Fuzzy:
                                                                              self.extension_activation_long)))
 
         self.extension = fuzz.defuzz(self.x_extension, aggregated, 'centroid')
-
         return self.extension
-
-
-if __name__ == '__main__':
-    fuzzy = Fuzzy()
-    print("first time extension        ", fuzzy.get_extension(10, 1, 0))
