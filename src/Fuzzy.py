@@ -1,28 +1,33 @@
 import numpy as np
 import skfuzzy as fuzz
+from src.Config import Config
 
 
 class Fuzzy:
 
     def __init__(self):
-        self.x_extension = np.arange(0, 21, 1)
-        self.x_behind_red_light = np.arange(-4, 17, 1)
-        self.x_arriving_green_light = np.arange(-4, 17, 1)
+        setting = Config['fuzzy']['range']
+        self.x_behind_red_light = setting['behind_red_light']
+        self.x_arriving_green_light = setting['arriving_green_light']
+        self.x_extension = setting['extension']
 
-        self.arriving_green_light_few = fuzz.trimf(self.x_arriving_green_light, [-4, 0, 4])
-        self.arriving_green_light_small = fuzz.trimf(self.x_arriving_green_light, [0, 4, 8])
-        self.arriving_green_light_medium = fuzz.trimf(self.x_arriving_green_light, [4, 8, 12])
-        self.arriving_green_light_many = fuzz.trimf(self.x_arriving_green_light, [8, 12, 16])
+        setting = Config['fuzzy']['membership_function']['arriving_green_light']
+        self.arriving_green_light_few = fuzz.trimf(self.x_arriving_green_light, setting['few'])
+        self.arriving_green_light_small = fuzz.trimf(self.x_arriving_green_light, setting['small'])
+        self.arriving_green_light_medium = fuzz.trimf(self.x_arriving_green_light, setting['medium'])
+        self.arriving_green_light_many = fuzz.trimf(self.x_arriving_green_light, setting['many'])
 
-        self.behind_red_light_few = fuzz.trimf(self.x_behind_red_light, [-4, 0, 4])
-        self.behind_red_light_small = fuzz.trimf(self.x_behind_red_light, [0, 4, 8])
-        self.behind_red_light_medium = fuzz.trimf(self.x_behind_red_light, [4, 8, 12])
-        self.behind_red_light_many = fuzz.trimf(self.x_behind_red_light, [8, 12, 16])
+        setting = Config['fuzzy']['membership_function']['behind_red_light']
+        self.behind_red_light_few = fuzz.trimf(self.x_behind_red_light, setting['few'])
+        self.behind_red_light_small = fuzz.trimf(self.x_behind_red_light, setting['small'])
+        self.behind_red_light_medium = fuzz.trimf(self.x_behind_red_light, setting['medium'])
+        self.behind_red_light_many = fuzz.trimf(self.x_behind_red_light, setting['many'])
 
-        self.extension_zero = fuzz.trimf(self.x_extension, [0, 0, 5])
-        self.extension_short = fuzz.trimf(self.x_extension, [0, 5, 10])
-        self.extension_medium = fuzz.trimf(self.x_extension, [5, 10, 15])
-        self.extension_long = fuzz.trimf(self.x_extension, [10, 15, 20])
+        setting = Config['fuzzy']['membership_function']['extension']
+        self.extension_zero = fuzz.trimf(self.x_extension, setting['zero'])
+        self.extension_short = fuzz.trimf(self.x_extension, setting['short'])
+        self.extension_medium = fuzz.trimf(self.x_extension, setting['medium'])
+        self.extension_long = fuzz.trimf(self.x_extension, setting['long'])
 
     def get_extension(self, arriving_green_light_car, behind_red_light_car, extension_count):
         self.behind_red_light_level_few = fuzz.interp_membership(self.x_behind_red_light,

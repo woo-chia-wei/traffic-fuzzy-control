@@ -1,3 +1,5 @@
+import numpy as np
+
 Config = {
     'vehicle': {
         'speed': 5,
@@ -40,5 +42,32 @@ Config = {
         'road_marking_alternate_lengths': (30, 20),
         'road_marking_gap_from_yellow_box': 10,
         'yellow_box_junction': (50, 50, 50, 50),  # top, right, bottom, left
+    },
+    'fuzzy': {
+        'range': {
+            'behind_red_light': np.arange(-4, 17, 1),
+            'arriving_green_light': np.arange(-4, 17, 1),
+            'extension': np.arange(0, 21, 1)
+        },
+        'membership_function': {
+            'behind_red_light': {
+                'few': [-4, 0, 4],
+                'small': [0, 4, 8],
+                'medium': [4, 8, 12],
+                'many': [8, 12, 16]
+            },
+            'arriving_green_light': {
+                'few': [-4, 0, 4],
+                'small': [0, 4, 8],
+                'medium': [4, 8, 12],
+                'many': [8, 12, 16]
+            },
+            'extension': {
+                'zero': [0, 0, 5],
+                'short': [0, 5, 10],
+                'medium': [5, 10, 15],
+                'long': [10, 15, 20]
+            }
+        }
     }
 }
