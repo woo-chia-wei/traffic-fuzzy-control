@@ -51,7 +51,7 @@ class TrafficLight:
         self.status = status
         self.start_time[self.status] = time.time()
 
-    def auto_update(self):
+    def auto_update(self, opposite_status: TrafficStatus):
         to_change_status = (time.time() - self.start_time[self.status]) > \
                            (self.duration[self.status] + self.duration_extension[self.status])
         if to_change_status:
@@ -60,13 +60,17 @@ class TrafficLight:
             elif self.status == TrafficStatus.yellow:
                 self.status = TrafficStatus.red
             elif self.status == TrafficStatus.red:
+                # if opposite is red, do not update
+                if opposite_status == TrafficStatus.green:
+                    return
                 self.status = TrafficStatus.green
             self.start_time[self.status] = time.time()
-        self.update_traffic_countdown()
 
     def update_traffic_countdown(self):
         font = pygame.font.SysFont('Comic Sans MS', 12, True)
         countdown = (self.duration[self.status] + self.duration_extension[self.status]) - (time.time() - self.start_time[self.status])
+        if countdown < 0: 
+            countdown = 0
         text_color = Config['colors']['black']
         if self.status == TrafficStatus.green:
             text_color = Config['colors']['green']

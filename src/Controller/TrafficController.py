@@ -69,8 +69,10 @@ class TrafficController:
 
     def update_and_draw_traffic_lights(self):
         for lane, traffic_light in self.traffic_lights.items():
-            traffic_light.auto_update()
+            opposite_status = self.get_opposite_status(lane)
+            traffic_light.auto_update(opposite_status)
             traffic_light.draw()
+            traffic_light.update_traffic_countdown()
 
     def change_status(self, double_lane: DoubleLane, status: TrafficStatus):
         for traffic_light in self.get_traffic_lights(double_lane):
@@ -82,3 +84,9 @@ class TrafficController:
     def stop(self, double_lane: DoubleLane):
         self.change_status(double_lane, TrafficStatus.yellow)
 
+    def get_opposite_status(self, lane: Lane):
+        if lane == Lane.right_to_left or \
+           lane == Lane.left_to_right:
+            return self.traffic_lights[Lane.bottom_to_top].status
+        else:
+            return self.traffic_lights[Lane.left_to_right].status
