@@ -66,11 +66,11 @@ class TrafficLight:
                 self.status = TrafficStatus.green
             self.start_time[self.status] = time.time()
 
-    def update_traffic_countdown(self):
+    def draw_countdown(self):
         font = pygame.font.SysFont('Comic Sans MS', 12, True)
         countdown = (self.duration[self.status] + self.duration_extension[self.status]) - (time.time() - self.start_time[self.status])
         if countdown < 0: 
-            countdown = 0
+            countdown = 0.0
         text_color = Config['colors']['black']
         if self.status == TrafficStatus.green:
             text_color = Config['colors']['traffic_green']

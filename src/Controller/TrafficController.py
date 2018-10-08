@@ -72,7 +72,7 @@ class TrafficController:
             opposite_status = self.get_opposite_status(lane)
             traffic_light.auto_update(opposite_status)
             traffic_light.draw()
-            traffic_light.update_traffic_countdown()
+            traffic_light.draw_countdown()
 
     def change_status(self, double_lane: DoubleLane, status: TrafficStatus):
         for traffic_light in self.get_traffic_lights(double_lane):
