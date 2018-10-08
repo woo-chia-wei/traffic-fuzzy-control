@@ -73,11 +73,11 @@ class TrafficLight:
             countdown = 0
         text_color = Config['colors']['black']
         if self.status == TrafficStatus.green:
-            text_color = Config['colors']['green']
+            text_color = Config['colors']['traffic_green']
         elif self.status == TrafficStatus.yellow:
-            text_color = Config['colors']['yellow']
+            text_color = Config['colors']['traffic_yellow']
         elif self.status == TrafficStatus.red:
-            text_color = Config['colors']['red']
+            text_color = Config['colors']['traffic_red']
         text_surface = font.render('{}'.format(round(countdown, 1)), True, text_color)
         pos_x = self.x
         pos_y = self.y

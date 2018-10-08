@@ -25,6 +25,8 @@ Config = {
         'white': (255, 255, 255),
         'dark_gray': (169, 169, 169),
         'traffic_yellow': (250, 210, 1),
+        'traffic_green': (34, 139, 94),
+        'traffic_red': (184, 29, 19),
         'red': (255, 0, 0),
         'yellow': (255, 255, 0),
         'green': (0, 255, 0)
