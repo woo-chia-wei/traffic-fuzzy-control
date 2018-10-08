@@ -1,6 +1,6 @@
 import pygame
 import os
-from src.Common import DoubleLane
+from src.Common import DoubleLane, Lane
 from src.Config import Config
 
 
@@ -102,6 +102,13 @@ class BackgroundController:
         self.spawn_rate_buttons[DoubleLane.Vertical]['slow'] = self.surface.blit(fonts[0].render('Slow', True, colors[0]), (200, 45))
         self.spawn_rate_buttons[DoubleLane.Vertical]['medium'] = self.surface.blit(fonts[1].render('Medium', True, colors[1]), (240, 45))
         self.spawn_rate_buttons[DoubleLane.Vertical]['fast'] = self.surface.blit(fonts[2].render('Fast', True, colors[2]), (300, 45))
+
+    def draw_moving_averages(self, moving_averages):
+        normal_font = pygame.font.SysFont('Comic Sans MS', 16)
+        self.surface.blit(normal_font.render('Vehicles behind traffic light (Horizontal):', True, self.black), (5, 65))
+        self.surface.blit(normal_font.render('{0:.2f}'.format(moving_averages[Lane.left_to_right]), True, self.black), (320, 65))
+        self.surface.blit(normal_font.render('Vehicles behind traffic light (Vertical):', True, self.black), (5, 85))
+        self.surface.blit(normal_font.render('{0:.2f}'.format(moving_averages[Lane.top_to_bottom]), True, self.black), (320, 85))
 
     def draw_vehicle_count(self, total):
         font = pygame.font.SysFont('Comic Sans MS', 16)

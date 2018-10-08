@@ -1,6 +1,7 @@
 import glob
 import pygame
 import random
+import numpy as np
 
 from src.Common import Lane
 from src.Config import Config
@@ -30,6 +31,13 @@ class VehicleController:
             Lane.left_to_right: [pygame.image.load(f) for f in glob.glob('images/vehicles_left_to_right/*.png')],
             Lane.top_to_bottom: [pygame.image.load(f) for f in glob.glob('images/vehicles_top_to_bottom/*.png')],
             Lane.bottom_to_top: [pygame.image.load(f) for f in glob.glob('images/vehicles_bottom_to_top/*.png')]
+        }
+
+        self.num_vehicles_behind_traffic = {
+            Lane.right_to_left: [],
+            Lane.left_to_right: [],
+            Lane.top_to_bottom: [],
+            Lane.bottom_to_top: []
         }
 
         self.counter = 0
@@ -99,3 +107,23 @@ class VehicleController:
     def destroy_vehicles_outside_canvas(self):
         for lane, vehicles_in_single_lane in self.vehicles.items():
             self.vehicles[lane] = [v for v in self.vehicles[lane] if v.inside_canvas()]
+
+    def update_num_vehicles_behind_traffic(self):
+        for lane, vehicles_in_single_lane in self.vehicles.items():
+            count = len([v for v in self.vehicles[lane] if v.is_behind_traffic_light()])
+            self.num_vehicles_behind_traffic[lane].append(count)
+            moving_average_max_length = Config['simulator']['frame_rate'] * Config['simulator']['moving_averages_period']
+            while len(self.num_vehicles_behind_traffic[lane]) >= moving_average_max_length:
+                self.num_vehicles_behind_traffic[lane].pop(0)
+
+    def get_moving_averages_num_vehicles_behind_traffic(self):
+        all_lanes = [
+            Lane.right_to_left,
+            Lane.left_to_right,
+            Lane.top_to_bottom,
+            Lane.bottom_to_top
+        ]
+        result = {}
+        for lane in all_lanes:
+            result[lane] = np.mean(self.num_vehicles_behind_traffic[lane])
+        return result

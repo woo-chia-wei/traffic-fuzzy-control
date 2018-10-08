@@ -91,6 +91,10 @@ class Simulator:
             self.vehicle_ctrl.destroy_vehicles_outside_canvas()
             self.vehicle_ctrl.update_and_draw_vehicles()
 
+            self.vehicle_ctrl.update_num_vehicles_behind_traffic()
+            moving_averages = self.vehicle_ctrl.get_moving_averages_num_vehicles_behind_traffic()
+            self.background_ctrl.draw_moving_averages(moving_averages)
+
             pygame.display.update()
             self.clock.tick(Config['simulator']['frame_rate'])
 
