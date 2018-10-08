@@ -52,8 +52,11 @@ class TrafficLight:
         self.start_time[self.status] = time.time()
 
     def auto_update(self, opposite_status: TrafficStatus):
-        to_change_status = (time.time() - self.start_time[self.status]) > \
-                           (self.duration[self.status] + self.duration_extension[self.status])
+        over_time = (self.duration[self.status] + self.duration_extension[self.status]) - \
+                    (time.time() - self.start_time[self.status])
+
+        to_change_status = over_time < 0
+
         if to_change_status:
             if self.status == TrafficStatus.green:
                 self.status = TrafficStatus.yellow
@@ -62,6 +65,8 @@ class TrafficLight:
             elif self.status == TrafficStatus.red:
                 # if opposite is red, do not update
                 if opposite_status == TrafficStatus.green:
+                    return
+                if abs(over_time) < Config['simulator']['gap_between_traffic_switch']:
                     return
                 self.status = TrafficStatus.green
             self.start_time[self.status] = time.time()

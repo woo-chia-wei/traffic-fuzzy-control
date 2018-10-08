@@ -67,6 +67,9 @@ class TrafficController:
         }
         self.traffic_lights[lane] = TrafficLight(x, y, lane, traffic_light_images, self.surface)
 
+        if lane in [Lane.bottom_to_top, Lane.top_to_bottom]:
+            self.traffic_lights[lane].change_status(TrafficStatus.red)
+
     def update_and_draw_traffic_lights(self):
         for lane, traffic_light in self.traffic_lights.items():
             opposite_status = self.get_opposite_status(lane)

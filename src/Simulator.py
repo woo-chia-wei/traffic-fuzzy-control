@@ -68,8 +68,8 @@ class Simulator:
                             for rate in ['slow', 'medium', 'fast']:
                                 if self.background_ctrl.spawn_rate_buttons[double_lane][rate].collidepoint(event.pos):
                                     self.background_ctrl.set_spawn_rate(double_lane, rate)
-                        if self.background_ctrl.switch_traffic_button.collidepoint(event.pos):
-                            self.toggle_traffic()
+                        # if self.background_ctrl.switch_traffic_button.collidepoint(event.pos):
+                        #     self.toggle_traffic()
             else:
                 current_time = time.time()
                 if current_time - self.switching_traffic_start_time > Config['simulator']['gap_between_traffic_switch']:
@@ -105,7 +105,7 @@ class Simulator:
     def initialize(self):
         self.spawn(DoubleLane.Horizontal)
         self.spawn(DoubleLane.Vertical)
-        self.toggle_traffic()
+        # self.toggle_traffic()
 
     def start(self):
         pygame.init()
