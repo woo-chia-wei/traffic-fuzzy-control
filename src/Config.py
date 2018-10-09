@@ -33,8 +33,8 @@ Config = {
         'green': (0, 255, 0)
     },
     'traffic_light': {
-        'red_light_duration': 6,  # second
-        'yellow_light_duration': 2,  # second
+        'red_light_duration': 15,  # second
+        'yellow_light_duration': 3,  # second
         'green_light_duration': 15,  # second
         'distance_from_center': (40, 10),
         'body_height': 30,

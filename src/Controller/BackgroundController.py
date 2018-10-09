@@ -50,6 +50,7 @@ class BackgroundController:
         }
 
         self.switch_traffic_button = None
+        self.fuzzy_button = None
 
     def set_spawn_rate(self, double_lane: DoubleLane, target_rate):
         for rate in ['slow', 'medium', 'fast']:
@@ -174,6 +175,28 @@ class BackgroundController:
         h = rect.height + gap * 2
         pygame.draw.rect(self.surface, self.black, (x, y, w, h), 3)
         self.switch_traffic_button = rect
+
+    def draw_fuzzy_button(self):
+        font = pygame.font.SysFont('Comic Sans MS', 16)
+        text_surface = font.render('Calculate Fuzzy', True, self.black)
+        rect = self.surface.blit(text_surface, (self.screen_width - 150, 90))
+        gap = 5
+        x = rect.left - gap
+        y = rect.top - gap
+        w = rect.width + gap * 2
+        h = rect.height + gap * 2
+        pygame.draw.rect(self.surface, self.black, (x, y, w, h), 3)
+        self.fuzzy_button = rect
+
+    def draw_fuzzy_score(self, fuzzy_score, current_lane: DoubleLane):
+        normal_font = pygame.font.SysFont('Comic Sans MS', 16)
+        opposite_lane_name = 'Horizontal' if current_lane == DoubleLane.Vertical else 'Vertical'
+        self.surface.blit(normal_font.render('Fuzzy Green Light Ext. ({} Lane): '.format(opposite_lane_name), True, self.black), (5, 105))
+
+        score = '-'
+        if fuzzy_score:
+            score = '{:.2f}s'.format(fuzzy_score)
+        self.surface.blit(normal_font.render(score, True, self.black), (320, 105))
 
     def draw_light_durations(self):
         normal_font = pygame.font.SysFont('Comic Sans MS', 16)
