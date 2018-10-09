@@ -174,3 +174,21 @@ class BackgroundController:
         h = rect.height + gap * 2
         pygame.draw.rect(self.surface, self.black, (x, y, w, h), 3)
         self.switch_traffic_button = rect
+
+    def draw_light_durations(self):
+        normal_font = pygame.font.SysFont('Comic Sans MS', 16)
+        green_duration = Config['traffic_light']['green_light_duration']
+        yellow_duration = Config['traffic_light']['yellow_light_duration']
+        red_duration = Config['traffic_light']['red_light_duration']
+
+        pygame.draw.circle(self.surface, Config['colors']['traffic_red'], (self.screen_width - 160, 16), 8)
+        self.surface.blit(normal_font.render('Duration: {:.1f}'.format(red_duration), True, self.black),
+                          (self.screen_width - 140, 5))
+
+        pygame.draw.circle(self.surface, Config['colors']['traffic_yellow'], (self.screen_width - 160, 36), 8)
+        self.surface.blit(normal_font.render('Duration: {:.1f}'.format(yellow_duration), True, self.black),
+                          (self.screen_width - 140, 25))
+
+        pygame.draw.circle(self.surface, Config['colors']['traffic_green'], (self.screen_width - 160, 56), 8)
+        self.surface.blit(normal_font.render('Duration: {:.1f}'.format(green_duration), True, self.black),
+                          (self.screen_width - 140, 45))

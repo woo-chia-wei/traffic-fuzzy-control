@@ -85,6 +85,7 @@ class Simulator:
             self.background_ctrl.draw_road_markings()
             self.background_ctrl.draw_vehicle_count(self.vehicle_ctrl.counter)
             self.background_ctrl.draw_spawn_rate_buttons()
+            self.background_ctrl.draw_light_durations()
             # self.background_ctrl.draw_switch_traffic_button()
 
             self.traffic_ctrl.update_and_draw_traffic_lights()
