@@ -19,7 +19,8 @@ Config = {
         },
         'frame_rate': 30,
         'gap_between_traffic_switch': 2,  # second
-        'moving_averages_period': 5  # second
+        'moving_averages_period': 5,  # second
+        'static_duration': 1  # second
     },
     'colors': {
         'black': (0, 0, 0),

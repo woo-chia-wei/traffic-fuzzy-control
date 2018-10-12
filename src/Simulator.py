@@ -26,6 +26,8 @@ class Simulator:
 
         self.switching_traffic = False
         self.switching_traffic_start_time = None
+        self.start_time = time.time()
+        self.moving_averages = self.vehicle_ctrl.get_moving_averages_num_vehicles_behind_traffic()
 
     def spawn(self, double_lane: DoubleLane):
         if double_lane == DoubleLane.Horizontal:
@@ -79,11 +81,12 @@ class Simulator:
             self.traffic_ctrl.update_and_draw_traffic_lights()
             self.vehicle_ctrl.destroy_vehicles_outside_canvas()
             self.vehicle_ctrl.update_and_draw_vehicles()
-
             self.vehicle_ctrl.update_num_vehicles_behind_traffic()
-            moving_averages = self.vehicle_ctrl.get_moving_averages_num_vehicles_behind_traffic()
-            self.background_ctrl.draw_moving_averages(moving_averages)
-            self.background_ctrl.draw_fuzzy_score(self.calculate_fuzzy_score(moving_averages),
+
+            if round((time.time() - self.start_time), 1) % Config['simulator']['static_duration'] == 0:
+                self.moving_averages = self.vehicle_ctrl.get_moving_averages_num_vehicles_behind_traffic()
+            self.background_ctrl.draw_moving_averages(self.moving_averages)
+            self.background_ctrl.draw_fuzzy_score(self.calculate_fuzzy_score(self.moving_averages),
                                                   self.traffic_ctrl.get_current_active_lane())
 
             pygame.display.update()
