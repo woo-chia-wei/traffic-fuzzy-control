@@ -67,16 +67,17 @@ class Simulator:
                         for rate in ['slow', 'medium', 'fast']:
                             if self.background_ctrl.spawn_rate_buttons[double_lane][rate].collidepoint(event.pos):
                                 self.background_ctrl.set_spawn_rate(double_lane, rate)
-                    # if self.background_ctrl.fuzzy_button.collidepoint(event.pos):
-                    #     moving_averages = self.vehicle_ctrl.get_moving_averages_num_vehicles_behind_traffic()
-                    #     print(self.calculate_fuzzy_score(moving_averages))
+                    if self.background_ctrl.fuzzy_button.collidepoint(event.pos):
+                        moving_averages = self.vehicle_ctrl.get_moving_averages_num_vehicles_behind_traffic()
+                        extension = self.calculate_fuzzy_score(moving_averages)
+                        self.traffic_ctrl.set_green_light_extension(extension)
 
             self.background_ctrl.refresh_screen()
             self.background_ctrl.draw_road_markings()
             self.background_ctrl.draw_vehicle_count(self.vehicle_ctrl.counter)
             self.background_ctrl.draw_spawn_rate_buttons()
-            self.background_ctrl.draw_light_durations()
-            # self.background_ctrl.draw_fuzzy_button()
+            self.background_ctrl.draw_light_durations(self.traffic_ctrl.get_opposite_green_light_extension())
+            self.background_ctrl.draw_fuzzy_button()
 
             self.traffic_ctrl.update_and_draw_traffic_lights()
             self.vehicle_ctrl.destroy_vehicles_outside_canvas()
