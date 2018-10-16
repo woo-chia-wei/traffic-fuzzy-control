@@ -20,7 +20,9 @@ Config = {
         'frame_rate': 30,
         'gap_between_traffic_switch': 2,  # second
         'moving_averages_period': 5,  # second
-        'static_duration': 1  # second
+        'static_duration': 1,  # second
+        'seconds_before_extension': 5,  # second
+        'fuzzy_notification_duration': 5  #second
     },
     'colors': {
         'black': (0, 0, 0),

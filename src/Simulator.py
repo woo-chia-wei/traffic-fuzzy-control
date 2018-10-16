@@ -29,6 +29,10 @@ class Simulator:
         self.start_time = time.time()
         self.moving_averages = self.vehicle_ctrl.get_moving_averages_num_vehicles_behind_traffic()
 
+        self.is_extended = False
+        self.green_light_remaining_time = Config['traffic_light']['green_light_duration']
+        self.extension_notification_start_time = time.time() - 10
+
     def spawn(self, double_lane: DoubleLane):
         if double_lane == DoubleLane.Horizontal:
             self.spawn_single_vehicle(Lane.left_to_right)
@@ -75,8 +79,9 @@ class Simulator:
             self.background_ctrl.draw_road_markings()
             self.background_ctrl.draw_vehicle_count(self.vehicle_ctrl.counter)
             self.background_ctrl.draw_spawn_rate_buttons()
-            self.background_ctrl.draw_light_durations()
-            # self.background_ctrl.draw_fuzzy_button()
+            self.background_ctrl.draw_light_durations(self.traffic_ctrl.get_green_light_extension())
+
+            # print(self.traffic_ctrl.get_green_light_remaining())
 
             self.traffic_ctrl.update_and_draw_traffic_lights()
             self.vehicle_ctrl.destroy_vehicles_outside_canvas()
@@ -85,9 +90,27 @@ class Simulator:
 
             if round((time.time() - self.start_time), 1) % Config['simulator']['static_duration'] == 0:
                 self.moving_averages = self.vehicle_ctrl.get_moving_averages_num_vehicles_behind_traffic()
+            fuzzy_score = self.calculate_fuzzy_score(self.moving_averages)
             self.background_ctrl.draw_moving_averages(self.moving_averages)
-            self.background_ctrl.draw_fuzzy_score(self.calculate_fuzzy_score(self.moving_averages),
-                                                  self.traffic_ctrl.get_current_active_lane())
+            self.background_ctrl.draw_fuzzy_score(fuzzy_score, self.traffic_ctrl.get_current_active_lane())
+
+            current_green_light_remaining_time = self.traffic_ctrl.get_green_light_remaining()
+            direction_changed = current_green_light_remaining_time > self.green_light_remaining_time
+            self.green_light_remaining_time = current_green_light_remaining_time
+
+            if not self.is_extended:
+                if current_green_light_remaining_time <= Config['simulator']['seconds_before_extension']:
+                    self.traffic_ctrl.set_green_light_extension(fuzzy_score)
+                    self.is_extended = True
+                    self.extension_notification_start_time = time.time()
+                    self.green_light_remaining_time = self.traffic_ctrl.get_green_light_remaining()
+            else:
+                if direction_changed:
+                    self.traffic_ctrl.clear_all_green_light_extension()
+                    self.is_extended = False
+
+            if time.time() - self.extension_notification_start_time < Config['simulator']['fuzzy_notification_duration']:
+                self.background_ctrl.draw_extension_notification(self.traffic_ctrl.get_green_light_extension())
 
             pygame.display.update()
             self.clock.tick(Config['simulator']['frame_rate'])
