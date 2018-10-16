@@ -57,15 +57,11 @@ class TrafficLight:
 
         to_change_status = over_time < 0
 
-        new_status = None
-
         if to_change_status:
             if self.status == TrafficStatus.green:
                 self.status = TrafficStatus.yellow
-                new_status = TrafficStatus.yellow
             elif self.status == TrafficStatus.yellow:
                 self.status = TrafficStatus.red
-                new_status = TrafficStatus.red
             elif self.status == TrafficStatus.red:
                 # if opposite is red, do not update
                 if opposite_status == TrafficStatus.green:
@@ -73,10 +69,7 @@ class TrafficLight:
                 if abs(over_time) < Config['simulator']['gap_between_traffic_switch']:
                     return
                 self.status = TrafficStatus.green
-                new_status = TrafficStatus.green
             self.start_time[self.status] = time.time()
-
-        return new_status
 
     def draw_countdown(self):
         font = pygame.font.SysFont('Comic Sans MS', 12, True)
@@ -102,6 +95,3 @@ class TrafficLight:
         elif self.lane == Lane.bottom_to_top:
             pos_x = self.x - self.width*2
         self.surface.blit(text_surface, (pos_x, pos_y))
-
-    def set_green_light_extension(self, extension):
-        self.duration_extension[TrafficStatus.green] = extension
