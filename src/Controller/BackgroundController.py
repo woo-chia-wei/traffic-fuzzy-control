@@ -198,20 +198,30 @@ class BackgroundController:
             score = '{:.2f}s'.format(fuzzy_score)
         self.surface.blit(normal_font.render(score, True, self.black), (320, 105))
 
-    def draw_light_durations(self):
+    def draw_extension_notification(self, extension):
+        normal_font = pygame.font.SysFont('Comic Sans MS', 16)
+        self.surface.blit(normal_font.render('Green light is extended by {:.1f}!'.format(extension), True, Config['colors']['traffic_green']), (5, 125))
+
+    def draw_light_durations(self, green_light_extension):
         normal_font = pygame.font.SysFont('Comic Sans MS', 16)
         green_duration = Config['traffic_light']['green_light_duration']
         yellow_duration = Config['traffic_light']['yellow_light_duration']
         red_duration = Config['traffic_light']['red_light_duration']
 
-        pygame.draw.circle(self.surface, Config['colors']['traffic_red'], (self.screen_width - 160, 16), 8)
+        pygame.draw.circle(self.surface, Config['colors']['traffic_red'], (self.screen_width - 180, 16), 8)
         self.surface.blit(normal_font.render('Duration: {:.1f}'.format(red_duration), True, self.black),
-                          (self.screen_width - 140, 5))
+                          (self.screen_width - 160, 5))
 
-        pygame.draw.circle(self.surface, Config['colors']['traffic_yellow'], (self.screen_width - 160, 36), 8)
+        pygame.draw.circle(self.surface, Config['colors']['traffic_yellow'], (self.screen_width - 180, 36), 8)
         self.surface.blit(normal_font.render('Duration: {:.1f}'.format(yellow_duration), True, self.black),
-                          (self.screen_width - 140, 25))
+                          (self.screen_width - 160, 25))
 
-        pygame.draw.circle(self.surface, Config['colors']['traffic_green'], (self.screen_width - 160, 56), 8)
-        self.surface.blit(normal_font.render('Duration: {:.1f}'.format(green_duration), True, self.black),
-                          (self.screen_width - 140, 45))
+        pygame.draw.circle(self.surface, Config['colors']['traffic_green'], (self.screen_width - 180, 56), 8)
+        if green_light_extension > 0:
+            self.surface.blit(
+                normal_font.render('Duration: {:.1f} + {:.1f}'.format(green_duration, green_light_extension), True,
+                                   self.black),
+                (self.screen_width - 160, 45))
+        else:
+            self.surface.blit(normal_font.render('Duration: {:.1f}'.format(green_duration), True, self.black),
+                              (self.screen_width - 160, 45))

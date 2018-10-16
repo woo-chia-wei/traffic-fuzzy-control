@@ -36,6 +36,8 @@ class TrafficController:
 
         self.fuzzy = Fuzzy()
 
+        self.latest_green_light_extension = 0
+
     def get_traffic_lights(self, double_lane: DoubleLane):
         if double_lane == DoubleLane.Horizontal:
             return [
@@ -80,16 +82,6 @@ class TrafficController:
             traffic_light.draw()
             traffic_light.draw_countdown()
 
-    def change_status(self, double_lane: DoubleLane, status: TrafficStatus):
-        for traffic_light in self.get_traffic_lights(double_lane):
-            traffic_light.change_status(status)
-
-    def go(self, double_lane: DoubleLane):
-        self.change_status(double_lane, TrafficStatus.green)
-
-    def stop(self, double_lane: DoubleLane):
-        self.change_status(double_lane, TrafficStatus.yellow)
-
     def get_opposite_status(self, lane: Lane):
         if lane == Lane.right_to_left or \
            lane == Lane.left_to_right:
@@ -106,3 +98,38 @@ class TrafficController:
         elif self.traffic_lights[Lane.top_to_bottom].status == TrafficStatus.green:
             return DoubleLane.Vertical
         return None
+
+    def get_green_light_extension(self):
+        current_lane = self.get_current_active_lane()
+        if not current_lane:
+            return self.latest_green_light_extension if self.latest_green_light_extension else 0
+        if current_lane == DoubleLane.Vertical:
+            self.latest_green_light_extension = self.traffic_lights[Lane.bottom_to_top].duration_extension[
+                TrafficStatus.green]
+        elif current_lane == DoubleLane.Horizontal:
+            self.latest_green_light_extension = self.traffic_lights[Lane.left_to_right].duration_extension[
+                TrafficStatus.green]
+        return self.latest_green_light_extension
+
+    def set_green_light_extension(self, extension):
+        current_lane = self.get_current_active_lane()
+        if not current_lane:
+            return
+        for tf in self.get_traffic_lights(current_lane):
+            tf.set_green_light_extension(extension)
+
+    def clear_all_green_light_extension(self):
+        for lane, tf in self.traffic_lights.items():
+            tf.set_green_light_extension(0)
+
+    def get_green_light_remaining(self):
+        current_lane = self.get_current_active_lane()
+        remaining_seconds = 0
+        if current_lane == DoubleLane.Vertical:
+            remaining_seconds = self.traffic_lights[Lane.bottom_to_top].get_green_light_remaining_time()
+        elif current_lane == DoubleLane.Horizontal:
+            remaining_seconds = self.traffic_lights[Lane.left_to_right].get_green_light_remaining_time()
+        return remaining_seconds
+
+    def in_transition(self)->bool:
+        return not self.get_current_active_lane()
