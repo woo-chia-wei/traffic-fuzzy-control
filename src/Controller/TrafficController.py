@@ -35,7 +35,6 @@ class TrafficController:
         self.create_traffic_light(x, y, Lane.bottom_to_top)
 
         self.fuzzy = Fuzzy()
-        self.latest_green_light_extension = 0
 
     def get_traffic_lights(self, double_lane: DoubleLane):
         if double_lane == DoubleLane.Horizontal:
@@ -77,9 +76,7 @@ class TrafficController:
     def update_and_draw_traffic_lights(self):
         for lane, traffic_light in self.traffic_lights.items():
             opposite_status = self.get_opposite_status(lane)
-            new_status = traffic_light.auto_update(opposite_status)
-            if new_status == TrafficStatus.red:
-                traffic_light.set_green_light_extension(0)
+            traffic_light.auto_update(opposite_status)
             traffic_light.draw()
             traffic_light.draw_countdown()
 
@@ -109,20 +106,3 @@ class TrafficController:
         elif self.traffic_lights[Lane.top_to_bottom].status == TrafficStatus.green:
             return DoubleLane.Vertical
         return None
-
-    def get_opposite_green_light_extension(self):
-        current_lane = self.get_current_active_lane()
-        if not current_lane:
-            return self.latest_green_light_extension
-        if current_lane == DoubleLane.Horizontal:
-            self.latest_green_light_extension = self.traffic_lights[Lane.bottom_to_top].duration_extension[TrafficStatus.green]
-        elif current_lane == DoubleLane.Vertical:
-            self.latest_green_light_extension = self.traffic_lights[Lane.left_to_right].duration_extension[TrafficStatus.green]
-        return self.latest_green_light_extension
-
-    def set_green_light_extension(self, extension):
-        current_lane = self.get_current_active_lane()
-        opposite_lane = DoubleLane.Vertical if current_lane == DoubleLane.Horizontal else DoubleLane.Horizontal
-
-        for tf in self.get_traffic_lights(opposite_lane):
-            tf.set_green_light_extension(extension)

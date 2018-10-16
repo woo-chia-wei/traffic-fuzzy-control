@@ -178,15 +178,14 @@ class BackgroundController:
 
     def draw_fuzzy_button(self):
         font = pygame.font.SysFont('Comic Sans MS', 16)
-        text_surface = font.render('Extend Green Light', True, Config['colors']['white'])
-        rect = self.surface.blit(text_surface, (self.screen_width - 170, 90))
+        text_surface = font.render('Calculate Fuzzy', True, self.black)
+        rect = self.surface.blit(text_surface, (self.screen_width - 150, 90))
         gap = 5
         x = rect.left - gap
         y = rect.top - gap
         w = rect.width + gap * 2
         h = rect.height + gap * 2
-        pygame.draw.rect(self.surface, Config['colors']['traffic_green'], (x, y, w, h), 0)
-        self.surface.blit(text_surface, (self.screen_width - 170, 90))
+        pygame.draw.rect(self.surface, self.black, (x, y, w, h), 3)
         self.fuzzy_button = rect
 
     def draw_fuzzy_score(self, fuzzy_score, current_lane: DoubleLane):
@@ -199,26 +198,20 @@ class BackgroundController:
             score = '{:.2f}s'.format(fuzzy_score)
         self.surface.blit(normal_font.render(score, True, self.black), (320, 105))
 
-    def draw_light_durations(self, green_light_extension):
+    def draw_light_durations(self):
         normal_font = pygame.font.SysFont('Comic Sans MS', 16)
         green_duration = Config['traffic_light']['green_light_duration']
         yellow_duration = Config['traffic_light']['yellow_light_duration']
         red_duration = Config['traffic_light']['red_light_duration']
 
-        pygame.draw.circle(self.surface, Config['colors']['traffic_red'], (self.screen_width - 180, 16), 8)
+        pygame.draw.circle(self.surface, Config['colors']['traffic_red'], (self.screen_width - 160, 16), 8)
         self.surface.blit(normal_font.render('Duration: {:.1f}'.format(red_duration), True, self.black),
-                          (self.screen_width - 160, 5))
+                          (self.screen_width - 140, 5))
 
-        pygame.draw.circle(self.surface, Config['colors']['traffic_yellow'], (self.screen_width - 180, 36), 8)
+        pygame.draw.circle(self.surface, Config['colors']['traffic_yellow'], (self.screen_width - 160, 36), 8)
         self.surface.blit(normal_font.render('Duration: {:.1f}'.format(yellow_duration), True, self.black),
-                          (self.screen_width - 160, 25))
+                          (self.screen_width - 140, 25))
 
-        pygame.draw.circle(self.surface, Config['colors']['traffic_green'], (self.screen_width - 180, 56), 8)
-        if green_light_extension > 0:
-            self.surface.blit(normal_font.render('Duration: {:.1f} + {:.1f}'.format(green_duration, green_light_extension), True, self.black),
-                              (self.screen_width - 160, 45))
-        else:
-            self.surface.blit(normal_font.render('Duration: {:.1f}'.format(green_duration), True, self.black), (self.screen_width - 160, 45))
-
-
-
+        pygame.draw.circle(self.surface, Config['colors']['traffic_green'], (self.screen_width - 160, 56), 8)
+        self.surface.blit(normal_font.render('Duration: {:.1f}'.format(green_duration), True, self.black),
+                          (self.screen_width - 140, 45))
