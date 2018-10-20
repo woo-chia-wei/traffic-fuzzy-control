@@ -90,9 +90,7 @@ class Simulator:
 
             if round((time.time() - self.start_time), 1) % Config['simulator']['static_duration'] == 0:
                 self.moving_averages = self.vehicle_ctrl.get_moving_averages_num_vehicles_behind_traffic()
-            fuzzy_score = self.calculate_fuzzy_score(self.moving_averages)
             self.background_ctrl.draw_moving_averages(self.moving_averages)
-            self.background_ctrl.draw_fuzzy_score(fuzzy_score, self.traffic_ctrl.get_current_active_lane())
 
             current_green_light_remaining_time = self.traffic_ctrl.get_green_light_remaining()
             direction_changed = current_green_light_remaining_time > self.green_light_remaining_time
@@ -100,6 +98,10 @@ class Simulator:
 
             if not self.is_extended:
                 if current_green_light_remaining_time <= Config['simulator']['seconds_before_extension']:
+                    fuzzy_score = self.calculate_fuzzy_score(self.moving_averages)
+                    self.horizontal = self.moving_averages[Lane.left_to_right]
+                    self.vertical = self.moving_averages[Lane.top_to_bottom]
+                    self.background_ctrl.draw_fuzzy_score(fuzzy_score, self.traffic_ctrl.get_current_active_lane())
                     self.traffic_ctrl.set_green_light_extension(fuzzy_score)
                     self.is_extended = True
                     self.extension_notification_start_time = time.time()
@@ -110,17 +112,22 @@ class Simulator:
                     self.is_extended = False
 
             if time.time() - self.extension_notification_start_time < Config['simulator']['fuzzy_notification_duration']:
-                self.background_ctrl.draw_extension_notification(self.traffic_ctrl.get_green_light_extension())
+                self.background_ctrl.draw_extension_notification(self.traffic_ctrl.get_green_light_extension(), self.horizontal, self.vertical)
 
             pygame.display.update()
             self.clock.tick(Config['simulator']['frame_rate'])
 
     def calculate_fuzzy_score(self, moving_averages):
         traffic_state = self.traffic_ctrl.get_current_active_lane()
+        if self.is_extended :
+            ext_count = 1
+        else:
+            ext_count =0
+            
         if traffic_state == DoubleLane.Vertical:
-            return self.traffic_ctrl.calculate_fuzzy_score(moving_averages[Lane.top_to_bottom], moving_averages[Lane.left_to_right], 0)
+            return self.traffic_ctrl.calculate_fuzzy_score(moving_averages[Lane.top_to_bottom], moving_averages[Lane.left_to_right], ext_count)
         elif traffic_state == DoubleLane.Horizontal:
-            return self.traffic_ctrl.calculate_fuzzy_score(moving_averages[Lane.left_to_right], moving_averages[Lane.top_to_bottom], 0)
+            return self.traffic_ctrl.calculate_fuzzy_score(moving_averages[Lane.left_to_right], moving_averages[Lane.top_to_bottom], ext_count)
 
     def initialize(self):
         self.spawn(DoubleLane.Horizontal)

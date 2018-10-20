@@ -198,9 +198,15 @@ class BackgroundController:
             score = '{:.2f}s'.format(fuzzy_score)
         self.surface.blit(normal_font.render(score, True, self.black), (320, 105))
 
-    def draw_extension_notification(self, extension):
+    def draw_extension_notification(self, extension, horizontal, vertical):
         normal_font = pygame.font.SysFont('Comic Sans MS', 16)
-        self.surface.blit(normal_font.render('Green light is extended by {:.1f}!'.format(extension), True, Config['colors']['traffic_green']), (5, 125))
+        
+        self.surface.blit(normal_font.render('Vehicle behind Traffic Light  ', True, Config['colors']['traffic_green']), (5, 125))
+        self.surface.blit(normal_font.render('     Horizontal : ', True, Config['colors']['traffic_green']), (5, 145))
+        self.surface.blit(normal_font.render('{:.1f}'.format(horizontal), True, Config['colors']['traffic_green']), (200, 145))
+        self.surface.blit(normal_font.render('     Vertical :', True, Config['colors']['traffic_green']), (5, 165))
+        self.surface.blit(normal_font.render('{:.1f}'.format(vertical), True, Config['colors']['traffic_green']), (200, 165))
+        self.surface.blit(normal_font.render('Green light is extended by {:.1f}!'.format(extension), True, Config['colors']['traffic_green']), (5, 185))
 
     def draw_light_durations(self, green_light_extension):
         normal_font = pygame.font.SysFont('Comic Sans MS', 16)

@@ -14,14 +14,14 @@ Config = {
         'bumper_distance': 5,
         'spawn_rate': {
             'fast': 400,  # millisecond
-            'medium': 900,  # millisecond
-            'slow': 1500,  # millisecond
+            'medium': 1500,  # millisecond
+            'slow': 3500,  # millisecond
         },
         'frame_rate': 30,
         'gap_between_traffic_switch': 2,  # second
-        'moving_averages_period': 5,  # second
+        'moving_averages_period': 1,  # second
         'static_duration': 1,  # second
-        'seconds_before_extension': 5,  # second
+        'seconds_before_extension': 1,  # second
         'fuzzy_notification_duration': 5  #second
     },
     'colors': {
@@ -36,9 +36,9 @@ Config = {
         'green': (0, 255, 0)
     },
     'traffic_light': {
-        'red_light_duration': 15,  # second
-        'yellow_light_duration': 3,  # second
-        'green_light_duration': 15,  # second
+        'red_light_duration': 10,  # second
+        'yellow_light_duration': 1.5,  # second
+        'green_light_duration': 10,  # second
         'distance_from_center': (40, 10),
         'body_height': 30,
         'body_width': 20
@@ -57,22 +57,22 @@ Config = {
         },
         'membership_function': {
             'behind_red_light': {
-                'few': [-4, 0, 4],
-                'small': [0, 4, 8],
-                'medium': [4, 8, 12],
-                'many': [8, 12, 16]
+                'few': [0, 0, 3],
+                'small': [0, 3, 6],
+                'medium': [3, 6, 9],
+                'many': [6, 9, 12]
             },
             'arriving_green_light': {
-                'few': [-4, 0, 4],
-                'small': [0, 4, 8],
-                'medium': [4, 8, 12],
-                'many': [8, 12, 16]
+                'few': [0, 0, 3],
+                'small': [0, 3, 6],
+                'medium': [3, 6, 9],
+                'many': [6, 9, 12]
             },
             'extension': {
-                'zero': [0, 0, 5],
-                'short': [0, 5, 10],
-                'medium': [5, 10, 15],
-                'long': [10, 15, 20]
+                'zero': [0, 0, 0],
+                'short': [0, 2, 4],
+                'medium': [2, 4, 6],
+                'long': [4, 6, 8]
             }
         }
     }
